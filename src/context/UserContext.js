@@ -9,6 +9,7 @@ export const UserContext = createContext({
   email: "",
   profilePhotoUrl: "",
   accountType: "",
+  setDetails: () => {}
 });
 
 export default ({ children }) => {

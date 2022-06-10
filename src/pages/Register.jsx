@@ -2,16 +2,30 @@ import {
   Box,
   Typography,
   TextField,
-  Button,
   Link,
   Divider,
+  Button,
 } from "@mui/material";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import { registerUser } from "../api/auth";
 import AuthPageBg from "../assets/auth-page-bg.jpg";
+import { AuthContext } from "../context/AuthContext";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const { isAuth, onSignIn } = useContext(AuthContext);
+  const { setDetails } = useContext(UserContext);
+
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (isAuth) {
+      nav("/feed");
+    }
+  }, [isAuth, nav]);
+
   const [firstName, setFirstName] = useState("");
   const [firstNameError, setFirstNameError] = useState(null);
 
@@ -27,9 +41,10 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState(null);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [registrationError, setRegistrationError] = useState(null);
 
-  const handleRegister = useCallback(() => {
+  const handleRegister = useCallback(async () => {
     let errorFree = true;
     if (!firstName) {
       errorFree = false;
@@ -72,7 +87,34 @@ const Register = () => {
 
     if (errorFree) {
       // submit
-      registerUser(firstName, lastName, email, password);
+      setIsLoading(true);
+      try {
+        // Call API
+        const { id, profilePhotoUrl, accountType } = await registerUser(
+          firstName,
+          lastName,
+          email,
+          password
+        );
+        // Set User Context
+        setDetails(
+          id,
+          firstName,
+          lastName,
+          email,
+          profilePhotoUrl,
+          accountType
+        );
+        // Set Auth Context
+        onSignIn();
+        // Set Loading state
+        setIsLoading(false);
+      } catch (err) {
+        setRegistrationError(err.message);
+        setPassword("");
+        setIsLoading(false);
+        setConfirmPassword("");
+      }
     }
   }, [firstName, lastName, email, password, confirmPassword, registerUser]);
 
@@ -148,12 +190,19 @@ const Register = () => {
                 textAlign: "center",
                 background: "black",
                 width: "100%",
-                mb: 2,
               }}
               variant="h4"
             >
               Register
             </Typography>
+            {/* ERROR DISPLAY */}
+            {registrationError && (
+              <Box bgcolor="maroon" sx={{ py: 2, textAlign: "center" }}>
+                <Typography color="white" variant="body2">
+                  {registrationError}
+                </Typography>
+              </Box>
+            )}
             <Box
               padding="1rem"
               sx={{
@@ -174,7 +223,7 @@ const Register = () => {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 helperText={firstNameError}
-                error={firstNameError}
+                error={!!firstNameError}
               />
               <TextField
                 sx={{ mb: 2 }}
@@ -187,7 +236,7 @@ const Register = () => {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 helperText={lastNameError}
-                error={lastNameError}
+                error={!!lastNameError}
               />
               <TextField
                 sx={{ mb: 2 }}
@@ -200,7 +249,7 @@ const Register = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 helperText={emailError}
-                error={emailError}
+                error={!!emailError}
               />
               <TextField
                 sx={{ mb: 2 }}
@@ -213,7 +262,7 @@ const Register = () => {
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
                 helperText={passwordError}
-                error={passwordError}
+                error={!!passwordError}
               />
               <TextField
                 sx={{ mb: 2 }}
@@ -225,11 +274,15 @@ const Register = () => {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                error={confirmPasswordError}
+                error={!!confirmPasswordError}
                 helperText={confirmPasswordError}
               />
-              <Button onClick={handleRegister} variant="contained">
-                Register
+              <Button
+                disabled={isLoading}
+                onClick={handleRegister}
+                variant="contained"
+              >
+                {isLoading ? "Signing Up..." : "Register"}
               </Button>
               <Typography variant="body2" mt={1}>
                 Already have an account ? Sign In{" "}

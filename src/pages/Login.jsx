@@ -6,17 +6,25 @@ import {
   Link,
   Divider,
 } from "@mui/material";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
-import { registerUser } from "../api/auth";
 import AuthPageBg from "../assets/auth-page-bg.jpg";
+import { loginUser } from "../api/auth";
+import { AuthContext } from "../context/AuthContext";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [firstName, setFirstName] = useState("");
-  const [firstNameError, setFirstNameError] = useState(null);
+  const { isAuth, onSignIn } = useContext(AuthContext);
+  const { setDetails } = useContext(UserContext);
 
-  const [lastName, setLastName] = useState("");
-  const [lastNameError, setLastNameError] = useState(null);
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (isAuth) {
+      nav("/feed");
+    }
+  }, [isAuth, nav]);
 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(null);
@@ -24,12 +32,10 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(null);
 
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState(null);
+  const [loginError, setLoginError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [registrationError, setRegistrationError] = useState(null);
-
-  const handleRegister = useCallback(() => {
+  const handleSignIn = useCallback(async () => {
     let errorFree = true;
     if (!email) {
       errorFree = false;
@@ -37,7 +43,7 @@ const Login = () => {
     } else {
       setEmailError("");
     }
-    
+
     if (!password) {
       errorFree = false;
       setPasswordError("Password cannot be empty");
@@ -46,10 +52,24 @@ const Login = () => {
     }
 
     if (errorFree) {
-      // submit
-      registerUser(email, password);
+      setIsLoading(true);
+      try {
+        const {
+          id,
+          name: { first, last },
+          profilePhotoUrl,
+          accountType,
+        } = await loginUser(email, password);
+        setDetails(id, first, last, email, profilePhotoUrl, accountType);
+        onSignIn();
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        setPassword("");
+        setLoginError(err.message);
+      }
     }
-  }, [ email, password, registerUser]);
+  }, [email, password, loginUser]);
 
   return (
     <Box width="100vw" height="100vh" position="relative" overflow="hidden">
@@ -123,12 +143,19 @@ const Login = () => {
                 textAlign: "center",
                 background: "black",
                 width: "100%",
-                mb: 2,
               }}
               variant="h4"
             >
               Login
             </Typography>
+            {/* ERROR DISPLAY */}
+            {loginError && (
+              <Box bgcolor="maroon" sx={{ py: 2, textAlign: "center" }}>
+                <Typography color="white" variant="body2">
+                  {loginError}
+                </Typography>
+              </Box>
+            )}
             <Box
               padding="1rem"
               sx={{
@@ -138,7 +165,6 @@ const Login = () => {
                 alignItems: "center",
               }}
             >
-
               <TextField
                 sx={{ mb: 2 }}
                 fullWidth
@@ -150,7 +176,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 helperText={emailError}
-                error={emailError}
+                error={!!emailError}
               />
               <TextField
                 sx={{ mb: 2 }}
@@ -163,11 +189,15 @@ const Login = () => {
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
                 helperText={passwordError}
-                error={passwordError}
+                error={!!passwordError}
               />
 
-              <Button onClick={handleRegister} variant="contained">
-                Login
+              <Button
+                disabled={isLoading}
+                onClick={handleSignIn}
+                variant="contained"
+              >
+                {isLoading ? "Signin in.." : "Login"}
               </Button>
               <Typography variant="body2" mt={1}>
                 Don&apos;t have an account ? Sign Up{" "}

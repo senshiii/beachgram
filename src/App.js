@@ -4,8 +4,7 @@ import AuthContext from "./context/AuthContext";
 import UserContext from "./context/UserContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
-
+import AuthProtection from "./components/AuthProtection/AuthProtection";
 
 const App = () => {
   return (
@@ -17,8 +16,30 @@ const App = () => {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <ProtectedRoute path="/feed" element={null} />
-              <ProtectedRoute path="/profile" element={null} />
+              <Route
+                path="/feed"
+                element={
+                  <AuthProtection>
+                    <></>
+                  </AuthProtection>
+                }
+              />
+              <Route
+                path="/campaign"
+                element={
+                  <AuthProtection>
+                    <></>
+                  </AuthProtection>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <AuthProtection>
+                    <></>
+                  </AuthProtection>
+                }
+              />
             </Routes>
           </BrowserRouter>
         </UserContext>
