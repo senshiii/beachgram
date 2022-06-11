@@ -1,9 +1,11 @@
 import { FavoriteBorderOutlined } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import React from "react";
-import CardThumb from "../../assets/auth-page-bg.jpg";
+import { useNavigate } from "react-router-dom";
+import CardThumb from "../assets/auth-page-bg.jpg";
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event, showBeachInfo }) => {
+  const nav = useNavigate();
   return (
     <Box
       bgcolor="#302e2e"
@@ -11,6 +13,7 @@ const EventCard = ({ event }) => {
       sx={{ borderRadius: "8px" }}
       p={3}
       width="100%"
+      boxShadow="0 0 10px -4px #000"
     >
       <img
         src={CardThumb}
@@ -52,7 +55,7 @@ const EventCard = ({ event }) => {
             alignItems: "center",
           }}
         >
-          <IconButton bgcolor="white" sx={{mr: 3}} >
+          <IconButton bgcolor="white" sx={{ mr: 3 }}>
             <FavoriteBorderOutlined htmlColor="white" />
           </IconButton>
           <Button
@@ -70,18 +73,36 @@ const EventCard = ({ event }) => {
           </Button>
         </Box>
       </Box>
-      <Box sx={{
-        bgcolor: 'black',
-        my: 2,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }} >
-        <img src={CardThumb} width="64px" height="64px" />
-        <Box>
-          <Typography variant="body2" >{}</Typography>
+      {showBeachInfo && (
+        <Box
+          onClick={() => nav(`/beach/${event.beachId}`)}
+          sx={{
+            bgcolor: "#1f1d1d",
+            my: 2,
+            p: 2,
+            display: "flex",
+            borderRadius: 2,
+            justifyContent: "space-between",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+        >
+          <img
+            src={CardThumb}
+            style={{ borderRadius: 6 }}
+            width="64px"
+            height="64px"
+          />
+          <Box sx={{ flex: 1, ml: 2 }}>
+            <Typography color="white" variant="h6">
+              {event.beachDetails.name}
+            </Typography>
+            <Typography color="white" variant="caption">
+              {event.beachDetails.address}
+            </Typography>
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

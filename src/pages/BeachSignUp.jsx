@@ -13,7 +13,7 @@ import AuthPageBg from "../assets/auth-page-bg.jpg";
 import { AuthContext } from "../context/AuthContext";
 import { BeachContext } from "../context/BeachContext";
 import { useNavigate } from "react-router-dom";
-import AuthHeader from "../components/AuthHeader/AuthHeader";
+import AuthHeader from "../components/AuthHeader";
 
 const BeachSignUp = () => {
   const { isAuth, onSignIn } = useContext(AuthContext);

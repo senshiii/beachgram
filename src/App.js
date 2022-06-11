@@ -4,13 +4,15 @@ import AuthContext from "./context/AuthContext";
 import UserContext from "./context/UserContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import AuthProtection from "./components/AuthProtection/AuthProtection";
+import AuthProtection from "./components/AuthProtection";
 import Feed from "./pages/Feed";
 import BeachSignUp from "./pages/BeachSignUp";
 import BeachSignIn from "./pages/BeachSignIn";
 import BeachProfile from "./pages/BeachProfile";
 import BeachEvents from "./pages/BeachEvents";
 import BeachContext from "./context/BeachContext";
+import Campaigns from "./pages/Campaigns";
+import BeachProfileDisplay from "./pages/BeachProfileDisplay";
 
 const App = () => {
   return (
@@ -34,12 +36,23 @@ const App = () => {
                   }
                 /> */}
                 <Route path="/feed" element={<Feed />} />
+                <Route path="/campaigns" element={<Campaigns />} />
+                <Route
+                  path="/profile"
+                  element={
+                    <AuthProtection redirectRoute="/login/user">
+                      <BeachProfile />
+                    </AuthProtection>
+                  }
+                />
+                {/* BEACH ROUTES   */}
+                <Route path="/beach/:beachId" element={<BeachProfileDisplay />} />
                 <Route
                   path="/beach/profile"
                   element={
-                    <AuthProtection redirectRoute="/login/beach">
+                    // <AuthProtection redirectRoute="/login/beach">
                       <BeachProfile />
-                    </AuthProtection>
+                    // </AuthProtection>
                   }
                 />
                 <Route
@@ -47,22 +60,6 @@ const App = () => {
                   element={
                     <AuthProtection redirectRoute="/login/beach">
                       <BeachEvents />
-                    </AuthProtection>
-                  }
-                />
-                <Route
-                  path="/campaign"
-                  element={
-                    <AuthProtection redirectRoute="/login/user">
-                      <></>
-                    </AuthProtection>
-                  }
-                />
-                <Route
-                  path="/profile"
-                  element={
-                    <AuthProtection redirectRoute="/login/user">
-                      <></>
                     </AuthProtection>
                   }
                 />

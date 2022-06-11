@@ -2,7 +2,8 @@ import { db, auth } from "../firebase/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  browserLocalPersistence,
+  browserSessionPersistence,
+  browserLocalPersistence
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -10,7 +11,7 @@ export async function registerUser(firstName, lastName, email, password) {
   // console.log("[registerUser] email", email, "password", password);
   try {
     // Set persistence
-    await auth.setPersistence(browserLocalPersistence);
+    await auth.setPersistence(browserSessionPersistence);
     // Sign Up User
     const userCredentials = await createUserWithEmailAndPassword(
       auth,
@@ -41,7 +42,7 @@ export async function registerUser(firstName, lastName, email, password) {
 export async function loginUser(email, password) {
   try {
     // Set persistence
-    await auth.setPersistence(browserLocalPersistence);
+    await auth.setPersistence(browserSessionPersistence);
     const userCredentials = await signInWithEmailAndPassword(
       auth,
       email,
@@ -65,6 +66,7 @@ export async function loginUser(email, password) {
 
 export async function registerBeach(email, password, name, address) {
   try {
+    await auth.setPersistence(browserSessionPersistence);
     const beachCred = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -91,6 +93,7 @@ export async function registerBeach(email, password, name, address) {
 
 export async function loginBeach(email, password) {
   try {
+    await auth.setPersistence(browserSessionPersistence);
     const beachCred = await signInWithEmailAndPassword(auth, email, password);
     const beach = beachCred.user;
     // Retrieve data

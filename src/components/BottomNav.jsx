@@ -8,7 +8,6 @@ const BottomNav = ({
   activeTabId,
   eventsHref,
   campHref,
-  jobHref,
   profileHref,
 }) => {
   const nav = useNavigate();
@@ -38,12 +37,6 @@ const BottomNav = ({
           onClick={() => nav(campHref)}
           label="Campaigns"
           icon={<CampaignSharp />}
-        />
-        <BottomNavigationAction
-          sx={{ color: "white" }}
-          onClick={() => nav(jobHref)}
-          label="Jobs"
-          icon={<WorkSharp />}
         />
         <BottomNavigationAction
           sx={{ color: "white" }}

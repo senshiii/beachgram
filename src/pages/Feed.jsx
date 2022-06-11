@@ -1,8 +1,8 @@
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { fetchAllEvents } from "../api/events";
-import BottomNav from "../components/BottomNav/BottomNav";
-import EventCard from "../components/EventCard/EventCard";
+import BottomNav from "../components/BottomNav";
+import EventCard from "../components/EventCard";
 
 const Feed = () => {
   const [events, setEvents] = useState([]);
@@ -18,24 +18,30 @@ const Feed = () => {
 
   return (
     <>
-      <Box bgcolor="#29292b" p={2} minHeight="100vh">
+      <Box bgcolor="#29292b" p={2} minHeight="100vh" paddingBottom="10vh" >
         <Typography variant="h5" color="white">
           Upcoming Events
         </Typography>
         {isLoading ? (
-          <p>Loading...</p>
+          <Box
+          mt={2}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <CircularProgress />
+        </Box>
         ) : (
           <Box my={3}>
             {events.map((ev) => (
-              <EventCard key={ev.id} event={ev} />
+              <EventCard showBeachInfo key={ev.id} event={ev} />
             ))}
           </Box>
         )}
       </Box>
       <BottomNav
         eventsHref="/feed"
-        campHref="/campagins"
-        jobHref="/work"
+        campHref="/campaigns"
         profileHref="/profile"
         activeTabId={0}
       />

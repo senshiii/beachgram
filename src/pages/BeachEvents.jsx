@@ -1,6 +1,6 @@
 import { Box, Fab, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import BottomNav from "../components/BottomNav/BottomNav";
+import BottomNav from "../components/BottomNav";
 import AddIcon from "@mui/icons-material/Add";
 import { BeachContext } from "../context/BeachContext";
 import { getEventsByBeachId } from "../api/events";
@@ -43,7 +43,6 @@ const BeachEvents = () => {
       <BottomNav
         eventsHref="/beach/events"
         campHref="/beach/campaigns"
-        jobHref="/beach/work"
         profileHref="/beach/profile"
         activeTabId={0}
       />

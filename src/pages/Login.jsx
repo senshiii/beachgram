@@ -13,7 +13,7 @@ import { loginUser } from "../api/auth";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
-import AuthHeader from "../components/AuthHeader/AuthHeader";
+import AuthHeader from "../components/AuthHeader";
 
 const Login = () => {
   const { isAuth, onSignIn } = useContext(AuthContext);

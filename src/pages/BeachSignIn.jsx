@@ -12,7 +12,7 @@ import AuthPageBg from "../assets/auth-page-bg.jpg";
 import { loginBeach } from "../api/auth";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import AuthHeader from "../components/AuthHeader/AuthHeader";
+import AuthHeader from "../components/AuthHeader";
 import { BeachContext } from "../context/BeachContext";
 
 const BeachSignIn = () => {
