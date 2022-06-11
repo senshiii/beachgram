@@ -13,6 +13,7 @@ import { loginUser } from "../api/auth";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import AuthHeader from "../components/AuthHeader/AuthHeader";
 
 const Login = () => {
   const { isAuth, onSignIn } = useContext(AuthContext);
@@ -96,30 +97,10 @@ const Login = () => {
           background: "rgba(0,0,0,0.5)",
         }}
       >
-        {/* HEADER */}
-        <Box
-          bgcolor="white"
-          width="100%"
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-          }}
-          height="8vh"
-        >
-          <Typography
-            variant="h5"
-            sx={{
-              textAlign: "center",
-            }}
-          >
-            Beachgram
-          </Typography>
-        </Box>
+        <AuthHeader />
         {/* REGISTRATION FORM */}
         <Box
-          height="92vh"
+          height="90vh"
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -131,7 +112,6 @@ const Login = () => {
               width: "80%",
               background: "#fff",
               borderRadius: "6px",
-              paddingBottom: 4,
             }}
           >
             <Typography
@@ -165,6 +145,16 @@ const Login = () => {
                 alignItems: "center",
               }}
             >
+              <Typography
+                variant="body2"
+                sx={{
+                  my: 2,
+                  width: "100%",
+                  textAlign: "left",
+                }}
+              >
+                Sign In to manage your user account
+              </Typography>
               <TextField
                 sx={{ mb: 2 }}
                 fullWidth
@@ -197,11 +187,11 @@ const Login = () => {
                 onClick={handleSignIn}
                 variant="contained"
               >
-                {isLoading ? "Signin in.." : "Login"}
+                {isLoading ? "Signing in.." : "Login"}
               </Button>
               <Typography variant="body2" mt={1}>
                 Don&apos;t have an account ? Sign Up{" "}
-                <Link href="/register">here</Link>
+                <Link href="/register/user">here</Link>
               </Typography>
               <Divider
                 flexItem
@@ -210,18 +200,22 @@ const Login = () => {
               >
                 Or
               </Divider>
-              <Box mt={2} textAlign="center">
-                <Typography
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Sign In using&nbsp;
-                  <GoogleIcon sx={{ cursor: "pointer" }} />
-                </Typography>
-              </Box>
+              <Typography
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  mt: 2,
+                  textAlign: "center",
+                }}
+              >
+                Sign In using&nbsp;
+                <GoogleIcon sx={{ cursor: "pointer" }} />
+              </Typography>
+              <Typography variant="body2" mt={1}>
+                Have a beach account ? Sign In{" "}
+                <Link href="/login/beach">here</Link>
+              </Typography>
             </Box>
           </Box>
         </Box>

@@ -5,6 +5,9 @@ import UserContext from "./context/UserContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AuthProtection from "./components/AuthProtection/AuthProtection";
+import Feed from "./pages/Feed";
+import BeachSignUp from "./pages/BeachSignUp";
+import BeachSignIn from "./pages/BeachSignIn";
 
 const App = () => {
   return (
@@ -14,20 +17,15 @@ const App = () => {
         <UserContext>
           <BrowserRouter>
             <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route
-                path="/feed"
-                element={
-                  <AuthProtection>
-                    <></>
-                  </AuthProtection>
-                }
-              />
+              <Route path="/login/user" element={<Login />} />
+              <Route path="/register/user" element={<Register />} />
+              <Route path="/login/beach" element={<BeachSignIn />} />
+              <Route path="/register/beach" element={<BeachSignUp />} />
+              <Route path="/feed" element={<Feed />} />
               <Route
                 path="/campaign"
                 element={
-                  <AuthProtection>
+                  <AuthProtection redirectRoute="/login/user">
                     <></>
                   </AuthProtection>
                 }
@@ -35,7 +33,7 @@ const App = () => {
               <Route
                 path="/profile"
                 element={
-                  <AuthProtection>
+                  <AuthProtection redirectRoute="/login/user">
                     <></>
                   </AuthProtection>
                 }

@@ -2,12 +2,15 @@ import { db, auth } from "../firebase/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  browserLocalPersistence,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export async function registerUser(firstName, lastName, email, password) {
   // console.log("[registerUser] email", email, "password", password);
   try {
+    // Set persistence
+    await auth.setPersistence(browserLocalPersistence);
     // Sign Up User
     const userCredentials = await createUserWithEmailAndPassword(
       auth,
@@ -50,6 +53,8 @@ export async function registerUser(firstName, lastName, email, password) {
 
 export async function loginUser(email, password) {
   try {
+    // Set persistence
+    await auth.setPersistence(browserLocalPersistence);
     const userCredentials = await signInWithEmailAndPassword(
       auth,
       email,
@@ -65,7 +70,9 @@ export async function loginUser(email, password) {
     throw new Error("Something went wrong");
   } catch (err) {
     console.log("[loginUser] err", err.message);
-    if(err.message?.includes("wrong-password")) throw new Error("Incorrect credentials");
+    if (err.message?.includes("wrong-password"))
+      throw new Error("Incorrect credentials");
     else throw err;
   }
 }
+

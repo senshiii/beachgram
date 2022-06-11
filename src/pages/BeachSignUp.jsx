@@ -15,7 +15,7 @@ import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import AuthHeader from "../components/AuthHeader/AuthHeader";
 
-const Register = () => {
+const BeachSignUp = () => {
   const { isAuth, onSignIn } = useContext(AuthContext);
   const { setDetails } = useContext(UserContext);
 
@@ -171,9 +171,9 @@ const Register = () => {
                 background: "black",
                 width: "100%",
               }}
-              variant="h4"
+              variant="h5"
             >
-              Register
+              Beach Sign Up
             </Typography>
             {/* ERROR DISPLAY */}
             {registrationError && (
@@ -200,7 +200,7 @@ const Register = () => {
                   textAlign: "left",
                 }}
               >
-                Sign Up to create your user account
+                Sign Up to create your beach account
               </Typography>
               <TextField
                 sx={{ mb: 2 }}
@@ -272,11 +272,11 @@ const Register = () => {
                 onClick={handleRegister}
                 variant="contained"
               >
-                {isLoading ? "Signing Up..." : "Register"}
+                {isLoading ? "Signing Up..." : "Sign Up"}
               </Button>
               <Typography variant="body2" mt={1}>
                 Already have an account ? Sign In{" "}
-                <Link href="/login/user">here </Link>
+                <Link href="/login/beach">here </Link>
               </Typography>
               <Divider
                 flexItem
@@ -298,8 +298,8 @@ const Register = () => {
                 <GoogleIcon sx={{ cursor: "pointer" }} />
               </Typography>
               <Typography variant="body2" mt={1}>
-                Looking for a beach account ? Sign Up{" "}
-                <Link href="/register/beach">here </Link>
+                Looking for a user account ? Sign Up{" "}
+                <Link href="/register/user">here </Link>
               </Typography>
             </Box>
           </Box>
@@ -309,4 +309,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default BeachSignUp;
