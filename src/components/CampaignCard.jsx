@@ -1,9 +1,24 @@
 import { Person, PersonAddAlt } from "@mui/icons-material";
-import { Box, Button, Chip, IconButton, Typography } from "@mui/material";
+import { Box, Button, Chip, Typography } from "@mui/material";
 import CardThumb from "../assets/auth-page-bg.jpg";
+import { useCallback, useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { rsvpCampaign, unRsvpCampaign } from "../api/user";
 
-const CampaignCard = ({ campaign, showBeachInfo }) => {
+const CampaignCard = ({ rsvped, campaign, showBeachInfo }) => {
   const fillingFast = campaign.headCount >= campaign.maxParticipants / 2;
+
+  const { uid, addCampaignRsvp, removeCampaignRsvp } = useContext(UserContext);
+
+  const handleRsvp = useCallback(async () => {
+    await rsvpCampaign(campaign.id, uid);
+    addCampaignRsvp(campaign.id);
+  }, [campaign.id, uid]);
+
+  const handleUnRsvp = useCallback(async () => {
+    await unRsvpCampaign(campaign.id, uid);
+    removeCampaignRsvp(campaign.id);
+  }, [campaign.id, uid]);
 
   return (
     <Box
@@ -25,8 +40,15 @@ const CampaignCard = ({ campaign, showBeachInfo }) => {
         >
           {campaign.title}
         </Typography>
-        {fillingFast && (
-          <Box my={2}>
+        <Box
+          my={2}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
+          {fillingFast && (
             <Chip
               label="🔥 Filling Fast"
               sx={{
@@ -34,10 +56,23 @@ const CampaignCard = ({ campaign, showBeachInfo }) => {
                 fontWeight: "bold",
                 color: "white",
                 borderRadius: "4px",
+                mr: 2,
               }}
             />
-          </Box>
-        )}
+          )}
+          {rsvped && (
+            <Chip
+              label="Rsvp-ed"
+              sx={{
+                background: "lightgreen",
+                fontWeight: "bold",
+                color: "black",
+                borderRadius: "4px",
+                mr: 2,
+              }}
+            />
+          )}
+        </Box>
         <Typography variant="body2" color="gray">
           {new Date(campaign.campaignDate.toDate()).toLocaleDateString(
             "en-Us",
@@ -84,17 +119,33 @@ const CampaignCard = ({ campaign, showBeachInfo }) => {
             alignItems: "center",
           }}
         >
-          <Button
-            fullWidth
-            my={2}
-            sx={{
-              background: "#4cc229",
-              color: "white",
-              fontSize: ".8rem",
-            }}
-          >
-            I'm going
-          </Button>
+          {rsvped ? (
+            <Button
+              fullWidth
+              onClick={handleUnRsvp}
+              my={2}
+              sx={{
+                background: "red",
+                color: "white",
+                fontSize: ".8rem",
+              }}
+            >
+              I'm Out
+            </Button>
+          ) : (
+            <Button
+              onClick={handleRsvp}
+              fullWidth
+              my={2}
+              sx={{
+                background: "#4cc229",
+                color: "white",
+                fontSize: ".8rem",
+              }}
+            >
+              Count me in
+            </Button>
+          )}
         </Box>
       </Box>
       {showBeachInfo && (

@@ -1,12 +1,15 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { getCampaigns } from "../api/campaigns";
 import BottomNav from "../components/BottomNav";
 import CampaignCard from "../components/CampaignCard";
+import { UserContext } from "../context/UserContext";
 
 const Campaigns = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { campaignRsvps } = useContext(UserContext);
 
   useEffect(() => {
     setIsLoading(true);
@@ -33,7 +36,12 @@ const Campaigns = () => {
           </Box>
         ) : (
           campaigns.map((camp) => (
-            <CampaignCard showBeachInfo campaign={camp} key={camp.id} />
+            <CampaignCard
+              rsvped={campaignRsvps?.includes(camp.id)}
+              showBeachInfo
+              campaign={camp}
+              key={camp.id}
+            />
           ))
         )}
       </Box>

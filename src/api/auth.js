@@ -28,6 +28,8 @@ export async function registerUser(firstName, lastName, email, password) {
       email,
       emailVerified: user.emailVerified,
       profilePhotoUrl: user.photoURL,
+      eventRsvps: [],
+      campaignRsvps: []
     };
     await setDoc(docRef, userData, { merge: true });
 
@@ -53,6 +55,7 @@ export async function loginUser(email, password) {
     const docSnap = await getDoc(userDoc);
     if (docSnap.exists()) {
       const userData = docSnap.data();
+      console.log('[loginUser] userData', userData);
       return { id: user.uid, ...userData };
     }
     throw new Error("Something went wrong");

@@ -1,12 +1,14 @@
 import { Box, CircularProgress, Divider, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { fetchAllEvents } from "../api/events";
 import BottomNav from "../components/BottomNav";
 import EventCard from "../components/EventCard";
+import { UserContext } from "../context/UserContext";
 
 const Feed = () => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { eventRsvps } = useContext(UserContext);
 
   useEffect(() => {
     setIsLoading(true);
@@ -18,23 +20,28 @@ const Feed = () => {
 
   return (
     <>
-      <Box bgcolor="#29292b" p={2} minHeight="100vh" paddingBottom="10vh" >
+      <Box bgcolor="#29292b" p={2} minHeight="100vh" paddingBottom="10vh">
         <Typography variant="h5" color="white">
           Upcoming Events
         </Typography>
         {isLoading ? (
           <Box
-          mt={2}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <CircularProgress />
-        </Box>
+            mt={2}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress />
+          </Box>
         ) : (
           <Box my={3}>
             {events.map((ev) => (
-              <EventCard showBeachInfo key={ev.id} event={ev} />
+              <EventCard
+                rsvped={eventRsvps?.includes(ev.id)}
+                showBeachInfo
+                key={ev.id}
+                event={ev}
+              />
             ))}
           </Box>
         )}

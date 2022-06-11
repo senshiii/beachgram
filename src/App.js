@@ -13,6 +13,7 @@ import BeachEvents from "./pages/BeachEvents";
 import BeachContext from "./context/BeachContext";
 import Campaigns from "./pages/Campaigns";
 import BeachProfileDisplay from "./pages/BeachProfileDisplay";
+import Profile from "./pages/Profile";
 
 const App = () => {
   return (
@@ -27,31 +28,40 @@ const App = () => {
                 <Route path="/register/user" element={<Register />} />
                 <Route path="/login/beach" element={<BeachSignIn />} />
                 <Route path="/register/beach" element={<BeachSignUp />} />
-                {/* <Route
+                <Route
+                  path="/profile"
+                  element={
+                    <AuthProtection redirectRoute="/login/user">
+                      <Profile />
+                    </AuthProtection>
+                  }
+                />
+                <Route
                   path="/feed"
                   element={
                     <AuthProtection redirectRoute="/login/user">
                       <Feed />
                     </AuthProtection>
                   }
-                /> */}
-                <Route path="/feed" element={<Feed />} />
-                <Route path="/campaigns" element={<Campaigns />} />
+                />
                 <Route
-                  path="/profile"
+                  path="/campaigns"
                   element={
                     <AuthProtection redirectRoute="/login/user">
-                      <BeachProfile />
+                      <Campaigns />
                     </AuthProtection>
                   }
                 />
                 {/* BEACH ROUTES   */}
-                <Route path="/beach/:beachId" element={<BeachProfileDisplay />} />
+                <Route
+                  path="/beach/:beachId"
+                  element={<BeachProfileDisplay />}
+                />
                 <Route
                   path="/beach/profile"
                   element={
                     // <AuthProtection redirectRoute="/login/beach">
-                      <BeachProfile />
+                    <BeachProfile />
                     // </AuthProtection>
                   }
                 />

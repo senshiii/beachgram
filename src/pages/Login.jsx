@@ -37,38 +37,30 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignIn = useCallback(async () => {
-    let errorFree = true;
-    if (!email) {
-      errorFree = false;
-      setEmailError("Email cannot be empty");
-    } else {
-      setEmailError("");
-    }
-
-    if (!password) {
-      errorFree = false;
-      setPasswordError("Password cannot be empty");
-    } else {
-      setPasswordError("");
-    }
-
-    if (errorFree) {
-      setIsLoading(true);
-      try {
-        const {
-          id,
-          name: { first, last },
-          profilePhotoUrl,
-          accountType,
-        } = await loginUser(email, password);
-        setDetails(id, first, last, email, profilePhotoUrl, accountType);
-        onSignIn();
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        setPassword("");
-        setLoginError(err.message);
-      }
+    setIsLoading(true);
+    try {
+      const {
+        id,
+        name: { first, last },
+        profilePhotoUrl,
+        accountType,
+        ...userData
+      } = await loginUser(email, password);
+      setDetails(
+        id,
+        first,
+        last,
+        email,
+        profilePhotoUrl,
+        userData?.eventRsvps,
+        userData?.campaignRsvps
+      );
+      onSignIn();
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      setPassword("");
+      setLoginError(err.message);
     }
   }, [email, password, loginUser]);
 

@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 
 export const UserContext = createContext({
   uid: "",
@@ -8,7 +8,21 @@ export const UserContext = createContext({
   },
   email: "",
   profilePhotoUrl: "",
-  setDetails: () => {},
+  eventRsvps: [],
+  campaignRsvps: [],
+  setDetails: (
+    uid,
+    firstName,
+    lastName,
+    email,
+    profilePhotoUrl,
+    eventRsvps,
+    campaignRsvps
+  ) => {},
+  removeEventRsvp: (eventId) => {},
+  addEventRsvp: (eventId) => {},
+  removeCampaignRsvp: (capaignId) => {},
+  addCampaignRsvp: (capaignId) => {},
 });
 
 export default ({ children }) => {
@@ -17,14 +31,54 @@ export default ({ children }) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [profilePhotoUrl, setprofilePhotoUrl] = useState("");
+  const [eventRsvps, setEventRsvps] = useState([]);
+  const [campaignRsvps, setCampaignRsvps] = useState([]);
 
-  const setUserDetails = (uid, firstName, lastName, email, profilePhotoUrl) => {
+  const setUserDetails = (
+    uid,
+    firstName,
+    lastName,
+    email,
+    profilePhotoUrl,
+    eventRsvps,
+    campaignRsvps
+  ) => {
     setUid(uid);
     setFirstName(firstName);
     setLastName(lastName);
     setEmail(email);
     setprofilePhotoUrl(profilePhotoUrl);
+    setEventRsvps(eventRsvps);
+    setCampaignRsvps(campaignRsvps);
   };
+
+  const addEventRsvp = useCallback(
+    (eventId) => {
+      setEventRsvps([...eventRsvps, eventId]);
+    },
+    [eventRsvps]
+  );
+
+  const removeEventRsvp = useCallback(
+    (eventId) => {
+      setEventRsvps(eventRsvps.filter((eid) => eid !== eventId));
+    },
+    [eventRsvps]
+  );
+
+  const addCampaignRsvp = useCallback(
+    (campaignId) => {
+      setCampaignRsvps([...campaignRsvps, campaignId]);
+    },
+    [eventRsvps]
+  );
+
+  const removeCampaignRsvp = useCallback(
+    (campaignId) => {
+      setCampaignRsvps(campaignRsvps.filter((cid) => cid !== campaignId));
+    },
+    [eventRsvps]
+  );
 
   return (
     <UserContext.Provider
@@ -36,7 +90,13 @@ export default ({ children }) => {
         },
         email,
         profilePhotoUrl,
+        eventRsvps,
+        campaignRsvps,
         setDetails: setUserDetails,
+        addEventRsvp,
+        removeEventRsvp,
+        addCampaignRsvp,
+        removeCampaignRsvp
       }}
     >
       {children}
