@@ -8,116 +8,52 @@ import {
 } from "@mui/material";
 import { useState, useCallback, useEffect, useContext } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
-import { registerUser } from "../api/auth";
+import { registerBeach } from "../api/auth";
 import AuthPageBg from "../assets/auth-page-bg.jpg";
 import { AuthContext } from "../context/AuthContext";
-import { UserContext } from "../context/UserContext";
+import { BeachContext } from "../context/BeachContext";
 import { useNavigate } from "react-router-dom";
 import AuthHeader from "../components/AuthHeader/AuthHeader";
 
 const BeachSignUp = () => {
   const { isAuth, onSignIn } = useContext(AuthContext);
-  const { setDetails } = useContext(UserContext);
+  const { setDetails } = useContext(BeachContext);
 
   const nav = useNavigate();
 
   useEffect(() => {
     if (isAuth) {
-      nav("/feed");
+      nav("/beach/profile");
     }
   }, [isAuth, nav]);
 
-  const [firstName, setFirstName] = useState("");
-  const [firstNameError, setFirstNameError] = useState(null);
-
-  const [lastName, setLastName] = useState("");
-  const [lastNameError, setLastNameError] = useState(null);
-
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState(null);
-
   const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(null);
-
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState(null);
-
   const [isLoading, setIsLoading] = useState(false);
   const [registrationError, setRegistrationError] = useState(null);
 
   const handleRegister = useCallback(async () => {
-    let errorFree = true;
-    if (!firstName) {
-      errorFree = false;
-      setFirstNameError("First name cannot be empty");
-    } else {
-      setFirstNameError("");
+    setIsLoading(true);
+    try {
+      const { id, profilePhotoUrl } = await registerBeach(
+        email,
+        password,
+        name,
+        address
+      );
+      setDetails(id, name, address, email, profilePhotoUrl);
+      onSignIn();
+      setIsLoading(false);
+    } catch (err) {
+      setRegistrationError(err.message);
+      setIsLoading(false);
+      setPassword("");
+      setConfirmPassword("");
     }
-    if (!lastName) {
-      errorFree = false;
-      setLastNameError("Last name cannot be empty");
-    } else {
-      setLastNameError("");
-    }
-    if (!email) {
-      errorFree = false;
-      setEmailError("Email cannot be empty");
-    } else {
-      setEmailError("");
-    }
-    if (!password) {
-      errorFree = false;
-      setPasswordError("Password cannot be empty");
-    } else {
-      setPasswordError("");
-    }
-    if (!confirmPassword) {
-      errorFree = false;
-      setConfirmPasswordError("Confirm password cannot be empty");
-    } else {
-      setConfirmPasswordError("");
-    }
-    if (password !== confirmPassword) {
-      errorFree = false;
-      setPasswordError("Password and confirm password do not match");
-      setConfirmPasswordError("Password and confirm password do not match");
-    } else {
-      setPasswordError("");
-      setConfirmPasswordError("");
-    }
-
-    if (errorFree) {
-      // submit
-      setIsLoading(true);
-      try {
-        // Call API
-        const { id, profilePhotoUrl, accountType } = await registerUser(
-          firstName,
-          lastName,
-          email,
-          password
-        );
-        // Set User Context
-        setDetails(
-          id,
-          firstName,
-          lastName,
-          email,
-          profilePhotoUrl,
-          accountType
-        );
-        // Set Auth Context
-        onSignIn();
-        // Set Loading state
-        setIsLoading(false);
-      } catch (err) {
-        setRegistrationError(err.message);
-        setPassword("");
-        setIsLoading(false);
-        setConfirmPassword("");
-      }
-    }
-  }, [firstName, lastName, email, password, confirmPassword, registerUser]);
+  }, [name, address, email, password, confirmPassword, registerBeach]);
 
   return (
     <Box width="100vw" height="100vh" position="relative" overflow="hidden">
@@ -208,12 +144,10 @@ const BeachSignUp = () => {
                 type="text"
                 size="small"
                 variant="outlined"
-                label="First Name"
-                placeholder="Type your first name here"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                helperText={firstNameError}
-                error={!!firstNameError}
+                label="Name"
+                placeholder="Type your name here"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
               <TextField
                 sx={{ mb: 2 }}
@@ -221,12 +155,10 @@ const BeachSignUp = () => {
                 type="text"
                 size="small"
                 variant="outlined"
-                label="Last Name"
-                placeholder="Type your last name here"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                helperText={lastNameError}
-                error={!!lastNameError}
+                label="Address"
+                placeholder="Type your address name here"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
               />
               <TextField
                 sx={{ mb: 2 }}
@@ -238,8 +170,6 @@ const BeachSignUp = () => {
                 placeholder="Type your email here"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                helperText={emailError}
-                error={!!emailError}
               />
               <TextField
                 sx={{ mb: 2 }}
@@ -251,21 +181,17 @@ const BeachSignUp = () => {
                 value={password}
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
-                helperText={passwordError}
-                error={!!passwordError}
               />
               <TextField
                 sx={{ mb: 2 }}
                 fullWidth
                 size="small"
                 variant="outlined"
-                label="Passwod"
-                placeholder="Type your password here"
+                label="Confirm Passwod"
+                placeholder="Type your password again here"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                error={!!confirmPasswordError}
-                helperText={confirmPasswordError}
               />
               <Button
                 disabled={isLoading}

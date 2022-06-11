@@ -91,21 +91,14 @@ const Register = () => {
       setIsLoading(true);
       try {
         // Call API
-        const { id, profilePhotoUrl, accountType } = await registerUser(
+        const { id, profilePhotoUrl } = await registerUser(
           firstName,
           lastName,
           email,
           password
         );
         // Set User Context
-        setDetails(
-          id,
-          firstName,
-          lastName,
-          email,
-          profilePhotoUrl,
-          accountType
-        );
+        setDetails(id, firstName, lastName, email, profilePhotoUrl);
         // Set Auth Context
         onSignIn();
         // Set Loading state

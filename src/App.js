@@ -8,6 +8,9 @@ import AuthProtection from "./components/AuthProtection/AuthProtection";
 import Feed from "./pages/Feed";
 import BeachSignUp from "./pages/BeachSignUp";
 import BeachSignIn from "./pages/BeachSignIn";
+import BeachProfile from "./pages/BeachProfile";
+import BeachEvents from "./pages/BeachEvents";
+import BeachContext from "./context/BeachContext";
 
 const App = () => {
   return (
@@ -15,31 +18,57 @@ const App = () => {
       <CssBaseline />
       <AuthContext>
         <UserContext>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login/user" element={<Login />} />
-              <Route path="/register/user" element={<Register />} />
-              <Route path="/login/beach" element={<BeachSignIn />} />
-              <Route path="/register/beach" element={<BeachSignUp />} />
-              <Route path="/feed" element={<Feed />} />
-              <Route
-                path="/campaign"
-                element={
-                  <AuthProtection redirectRoute="/login/user">
-                    <></>
-                  </AuthProtection>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <AuthProtection redirectRoute="/login/user">
-                    <></>
-                  </AuthProtection>
-                }
-              />
-            </Routes>
-          </BrowserRouter>
+          <BeachContext>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login/user" element={<Login />} />
+                <Route path="/register/user" element={<Register />} />
+                <Route path="/login/beach" element={<BeachSignIn />} />
+                <Route path="/register/beach" element={<BeachSignUp />} />
+                {/* <Route
+                  path="/feed"
+                  element={
+                    <AuthProtection redirectRoute="/login/user">
+                      <Feed />
+                    </AuthProtection>
+                  }
+                /> */}
+                <Route path="/feed" element={<Feed />} />
+                <Route
+                  path="/beach/profile"
+                  element={
+                    <AuthProtection redirectRoute="/login/beach">
+                      <BeachProfile />
+                    </AuthProtection>
+                  }
+                />
+                <Route
+                  path="/beach/events"
+                  element={
+                    <AuthProtection redirectRoute="/login/beach">
+                      <BeachEvents />
+                    </AuthProtection>
+                  }
+                />
+                <Route
+                  path="/campaign"
+                  element={
+                    <AuthProtection redirectRoute="/login/user">
+                      <></>
+                    </AuthProtection>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <AuthProtection redirectRoute="/login/user">
+                      <></>
+                    </AuthProtection>
+                  }
+                />
+              </Routes>
+            </BrowserRouter>
+          </BeachContext>
         </UserContext>
       </AuthContext>
     </>

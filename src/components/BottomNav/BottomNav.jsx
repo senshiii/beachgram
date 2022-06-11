@@ -4,7 +4,13 @@ import React from "react";
 import { AccountCircle, CampaignSharp, WorkSharp } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
-const BottomNav = ({ activeTabId }) => {
+const BottomNav = ({
+  activeTabId,
+  eventsHref,
+  campHref,
+  jobHref,
+  profileHref,
+}) => {
   const nav = useNavigate();
   return (
     <Box
@@ -23,25 +29,25 @@ const BottomNav = ({ activeTabId }) => {
       >
         <BottomNavigationAction
           sx={{ color: "white" }}
-          onClick={() => nav("/feed")}
+          onClick={() => nav(eventsHref)}
           label="Events"
           icon={<EventIcon />}
         />
         <BottomNavigationAction
           sx={{ color: "white" }}
-          onClick={() => nav("/campaigns")}
+          onClick={() => nav(campHref)}
           label="Campaigns"
           icon={<CampaignSharp />}
         />
         <BottomNavigationAction
           sx={{ color: "white" }}
-          onClick={() => nav("/work")}
+          onClick={() => nav(jobHref)}
           label="Jobs"
           icon={<WorkSharp />}
         />
         <BottomNavigationAction
           sx={{ color: "white" }}
-          onClick={() => nav("/profile")}
+          onClick={() => nav(profileHref)}
           label="Profile"
           icon={<AccountCircle />}
         />

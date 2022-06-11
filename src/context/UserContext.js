@@ -8,8 +8,7 @@ export const UserContext = createContext({
   },
   email: "",
   profilePhotoUrl: "",
-  accountType: "",
-  setDetails: () => {}
+  setDetails: () => {},
 });
 
 export default ({ children }) => {
@@ -18,22 +17,13 @@ export default ({ children }) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [profilePhotoUrl, setprofilePhotoUrl] = useState("");
-  const [accountType, setAccountType] = useState("");
 
-  const setUserDetails = (
-    uid,
-    firstName,
-    lastName,
-    email,
-    profilePhotoUrl,
-    accountType
-  ) => {
+  const setUserDetails = (uid, firstName, lastName, email, profilePhotoUrl) => {
     setUid(uid);
     setFirstName(firstName);
     setLastName(lastName);
     setEmail(email);
     setprofilePhotoUrl(profilePhotoUrl);
-    setAccountType(accountType);
   };
 
   return (
@@ -45,9 +35,8 @@ export default ({ children }) => {
           last: lastName,
         },
         email,
-        accountType,
         profilePhotoUrl,
-        setDetails: setUserDetails
+        setDetails: setUserDetails,
       }}
     >
       {children}

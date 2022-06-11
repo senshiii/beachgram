@@ -9,68 +9,46 @@ import {
 import { useState, useCallback, useEffect, useContext } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import AuthPageBg from "../assets/auth-page-bg.jpg";
-import { loginUser } from "../api/auth";
+import { loginBeach } from "../api/auth";
 import { AuthContext } from "../context/AuthContext";
-import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import AuthHeader from "../components/AuthHeader/AuthHeader";
+import { BeachContext } from "../context/BeachContext";
 
 const BeachSignIn = () => {
   const { isAuth, onSignIn } = useContext(AuthContext);
-  const { setDetails } = useContext(UserContext);
+  const { setDetails } = useContext(BeachContext);
 
   const nav = useNavigate();
 
   useEffect(() => {
     if (isAuth) {
-      nav("/feed");
+      nav("/beach/profile");
     }
   }, [isAuth, nav]);
 
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState(null);
-
   const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(null);
 
   const [loginError, setLoginError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignIn = useCallback(async () => {
-    let errorFree = true;
-    if (!email) {
-      errorFree = false;
-      setEmailError("Email cannot be empty");
-    } else {
-      setEmailError("");
-    }
-
-    if (!password) {
-      errorFree = false;
-      setPasswordError("Password cannot be empty");
-    } else {
-      setPasswordError("");
-    }
-
-    if (errorFree) {
+    try {
       setIsLoading(true);
-      try {
-        const {
-          id,
-          name: { first, last },
-          profilePhotoUrl,
-          accountType,
-        } = await loginUser(email, password);
-        setDetails(id, first, last, email, profilePhotoUrl, accountType);
-        onSignIn();
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        setPassword("");
-        setLoginError(err.message);
-      }
+      const { id, name, address, profilePhotoUrl } = await loginBeach(
+        email,
+        password
+      );
+      setDetails(id, name, address, email, profilePhotoUrl);
+      onSignIn();
+      setIsLoading(false);
+    } catch (err) {
+      setLoginError(err.message);
+      setIsLoading(false);
+      setPassword("");
     }
-  }, [email, password, loginUser]);
+  }, [email, password, loginBeach]);
 
   return (
     <Box width="100vw" height="100vh" position="relative" overflowX="hidden">
@@ -165,8 +143,6 @@ const BeachSignIn = () => {
                 placeholder="Type your email here"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                helperText={emailError}
-                error={!!emailError}
               />
               <TextField
                 sx={{ mb: 2 }}
@@ -178,8 +154,6 @@ const BeachSignIn = () => {
                 value={password}
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
-                helperText={passwordError}
-                error={!!passwordError}
               />
 
               <Button
