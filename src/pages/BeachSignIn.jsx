@@ -36,11 +36,11 @@ const BeachSignIn = () => {
   const handleSignIn = useCallback(async () => {
     try {
       setIsLoading(true);
-      const { id, name, address, profilePhotoUrl } = await loginBeach(
+      const { id, name, address, profilePhotoUrl, thingsToDo } = await loginBeach(
         email,
         password
       );
-      setDetails(id, name, address, email, profilePhotoUrl);
+      setDetails(id, name, address, email, profilePhotoUrl, thingsToDo);
       onSignIn();
       setIsLoading(false);
     } catch (err) {

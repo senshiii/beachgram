@@ -6,7 +6,8 @@ export const BeachContext = createContext({
   address: "",
   email: "",
   profilePhotoUrl: "",
-  setDetails: (uid, name, address, email, profilePhotoUrl) => {},
+  thingsToDo: [],
+  setDetails: (uid, name, address, email, profilePhotoUrl, thinsgToDo) => {},
 });
 
 export default ({ children }) => {
@@ -15,13 +16,15 @@ export default ({ children }) => {
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [profilePhotoUrl, setprofilePhotoUrl] = useState("");
+  const [thingsToDo, setThingsToDo] = useState([]);
 
-  const setBeachDetails = (uid, name, address, email, profilePhotoUrl) => {
+  const setBeachDetails = (uid, name, address, email, profilePhotoUrl, thingsToDo) => {
     setUid(uid);
     setName(name);
     setAddress(address);
     setEmail(email);
     setprofilePhotoUrl(profilePhotoUrl);
+    setThingsToDo(thingsToDo);
   };
 
   return (
@@ -32,6 +35,7 @@ export default ({ children }) => {
         address,
         email,
         profilePhotoUrl,
+        thingsToDo,
         setDetails: setBeachDetails,
       }}
     >

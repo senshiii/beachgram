@@ -14,6 +14,7 @@ import BeachContext from "./context/BeachContext";
 import Campaigns from "./pages/Campaigns";
 import BeachProfileDisplay from "./pages/BeachProfileDisplay";
 import Profile from "./pages/Profile";
+import BeachCampaigns from "./pages/BeachCampaigns";
 
 const App = () => {
   return (
@@ -53,16 +54,13 @@ const App = () => {
                   }
                 />
                 {/* BEACH ROUTES   */}
-                <Route
-                  path="/beach/:beachId"
-                  element={<BeachProfileDisplay />}
-                />
+                
                 <Route
                   path="/beach/profile"
                   element={
-                    // <AuthProtection redirectRoute="/login/beach">
-                    <BeachProfile />
-                    // </AuthProtection>
+                    <AuthProtection redirectRoute="/login/beach">
+                      <BeachProfile />
+                    </AuthProtection>
                   }
                 />
                 <Route
@@ -72,6 +70,18 @@ const App = () => {
                       <BeachEvents />
                     </AuthProtection>
                   }
+                />
+                <Route
+                  path="/beach/campaigns"
+                  element={
+                    <AuthProtection redirectRoute="/login/beach">
+                      <BeachCampaigns />
+                    </AuthProtection>
+                  }
+                />
+                <Route
+                  path="/beach/:beachId"
+                  element={<BeachProfileDisplay />}
                 />
               </Routes>
             </BrowserRouter>

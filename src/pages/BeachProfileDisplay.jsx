@@ -22,7 +22,7 @@ const BeachProfileDisplay = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [profile, setProfile] = useState(null);
-  const { eventRsvps, campaignRsvps } = useContext(UserContext);
+  const { eventRsvps, likedEvents, campaignRsvps } = useContext(UserContext);
 
   useEffect(() => {
     if (!loaded) {
@@ -120,6 +120,7 @@ const BeachProfileDisplay = () => {
             </Typography>
             {profile.events.map((event) => (
               <EventCard
+                liked={likedEvents?.includes(event.id)}
                 rsvped={eventRsvps?.includes(event.id)}
                 event={event}
                 key={event.id}

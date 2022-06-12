@@ -1,27 +1,35 @@
-import { Person, PersonAddAlt } from "@mui/icons-material";
+import { DeleteSharp, EditSharp, Person, PersonAddAlt } from "@mui/icons-material";
 import { Box, Button, Chip, Typography } from "@mui/material";
 import CardThumb from "../assets/auth-page-bg.jpg";
 import { useCallback, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { rsvpCampaign, unRsvpCampaign } from "../api/user";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-const CampaignCard = ({ rsvped, campaign, showBeachInfo, onRsvp, onUnRsvp }) => {
+const CampaignCard = ({
+  rsvped,
+  campaign,
+  hideUserActions,
+  showAdminControls,
+  showBeachInfo,
+  onRsvp,
+  onUnRsvp,
+}) => {
   const fillingFast = campaign.headCount >= campaign.maxParticipants / 2;
-  const nav = useNavigate()
+  const nav = useNavigate();
 
   const { uid, addCampaignRsvp, removeCampaignRsvp } = useContext(UserContext);
 
   const handleRsvp = useCallback(async () => {
     await rsvpCampaign(campaign.id, uid);
     addCampaignRsvp(campaign.id);
-    if(onRsvp && typeof onRsvp === 'function') onRsvp(campaign.id);
+    if (onRsvp && typeof onRsvp === "function") onRsvp(campaign.id);
   }, [campaign.id, uid]);
 
   const handleUnRsvp = useCallback(async () => {
     await unRsvpCampaign(campaign.id, uid);
     removeCampaignRsvp(campaign.id);
-    if(onUnRsvp && typeof onUnRsvp === 'function') onUnRsvp(campaign.id);
+    if (onUnRsvp && typeof onUnRsvp === "function") onUnRsvp(campaign.id);
   }, [campaign.id, uid]);
 
   return (
@@ -64,6 +72,7 @@ const CampaignCard = ({ rsvped, campaign, showBeachInfo, onRsvp, onUnRsvp }) => 
               }}
             />
           )}
+          {/* RSVP Badge */}
           {rsvped && (
             <Chip
               label="Rsvp-ed"
@@ -77,6 +86,7 @@ const CampaignCard = ({ rsvped, campaign, showBeachInfo, onRsvp, onUnRsvp }) => 
             />
           )}
         </Box>
+        {/* Campaign Date */}
         <Typography variant="body2" color="gray">
           {new Date(campaign.campaignDate.toDate()).toLocaleDateString(
             "en-Us",
@@ -116,41 +126,70 @@ const CampaignCard = ({ rsvped, campaign, showBeachInfo, onRsvp, onUnRsvp }) => 
           <PersonAddAlt htmlColor="#4cc229" sx={{ mr: 1 }} /> Memebers
           Registered : {campaign.headCount}
         </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          {rsvped ? (
+        {!hideUserActions && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            {rsvped ? (
+              <Button
+                fullWidth
+                onClick={handleUnRsvp}
+                my={2}
+                sx={{
+                  background: "red",
+                  color: "white",
+                  fontSize: ".8rem",
+                }}
+              >
+                I'm Out
+              </Button>
+            ) : (
+              <Button
+                onClick={handleRsvp}
+                fullWidth
+                my={2}
+                sx={{
+                  background: "#4cc229",
+                  color: "white",
+                  fontSize: ".8rem",
+                }}
+              >
+                Count me in
+              </Button>
+            )}
+          </Box>
+        )}
+        {showAdminControls && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mt: 2,
+            }}
+          >
             <Button
               fullWidth
-              onClick={handleUnRsvp}
-              my={2}
-              sx={{
-                background: "red",
-                color: "white",
-                fontSize: ".8rem",
-              }}
+              sx={{ color: "yellow", borderColor: "yellow", mr: 1 }}
+              variant="outlined"
+              startIcon={<EditSharp />}
             >
-              I'm Out
+              Edit
             </Button>
-          ) : (
             <Button
-              onClick={handleRsvp}
               fullWidth
-              my={2}
-              sx={{
-                background: "#4cc229",
-                color: "white",
-                fontSize: ".8rem",
-              }}
+              variant="outlined"
+              sx={{ ml: 1, color: "red", borderColor: "red" }}
+              startIcon={<DeleteSharp />}
             >
-              Count me in
+              Delete
             </Button>
-          )}
-        </Box>
+          </Box>
+        )}
       </Box>
       {showBeachInfo && (
         <Box

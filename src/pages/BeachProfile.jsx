@@ -1,12 +1,19 @@
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Badge, Box, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import BottomNav from "../components/BottomNav";
-import Image from "../assets/auth-page-bg.jpg";
-import { LocationOn, Waves } from "@mui/icons-material";
+import { EditSharp, LocationOn, Waves } from "@mui/icons-material";
+import { useContext } from "react";
+import { BeachContext } from "../context/BeachContext";
+import ThingToDoCard from "../components/ThingToDoCard";
 
 const BeachProfile = () => {
   const [profilePhotoFile, setProfilePhotoFile] = useState(null);
   const [showPofilePhotoDialog, setShowPofilePhotoDialog] = useState(false);
+
+  const { name, email, address, profilePhotoUrl, thingsToDo } = useContext(
+    BeachContext
+  );
+
   return (
     <>
       <Box
@@ -24,9 +31,37 @@ const BeachProfile = () => {
             flexDirection: "column",
           }}
         >
-          <Avatar src={Image} sx={{ width: "100px", height: "100px" }}>
-            D
-          </Avatar>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            badgeContent={
+              <Avatar
+                sx={{
+                  background: "orange",
+                  cursor: "pointer",
+                  width: 22,
+                  height: 22,
+                }}
+              >
+                <EditSharp
+                  sx={{
+                    fontSize: ".8rem",
+                  }}
+                />
+              </Avatar>
+            }
+          >
+            <Avatar
+              sx={{
+                width: 80,
+                height: 80,
+              }}
+              src={profilePhotoUrl}
+            >
+              {name?.substring(0, 1)}
+            </Avatar>
+          </Badge>
+          
           <Typography
             variant="h5"
             my={2}
@@ -39,11 +74,12 @@ const BeachProfile = () => {
             }}
           >
             <Waves htmlColor="#2294e0" />
-            &nbsp;Digha Beach
+            &nbsp;{name}
           </Typography>
+
           <Typography
             variant="body2"
-            my={1}
+            my={2}
             color="white"
             sx={{
               display: "flex",
@@ -53,48 +89,37 @@ const BeachProfile = () => {
             }}
           >
             <LocationOn htmlColor="red" />
-            &nbsp;Digha, West Bengal, India
+            &nbsp;{address}
           </Typography>
-          <Button
-            startIcon={<FavoriteBorder />}
-            sx={{ background: "red", color: "black", my:2 }}
-          >
-            Add To Favourites
-          </Button>
         </Box>
 
-        <Box>
-          <Typography variant="h6" mt={2} color="white">
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h6" color="white">
             Things To Do
           </Typography>
-          {profile.thingsToDo.map((ttd) => (
-            <ThingToDoCard ttd={ttd} key={ttd.id} />
-          ))}
+          <IconButton
+            size="small"
+            sx={{ width: 30, height: 30, background: "gray", ml: 2 }}
+          >
+            <EditSharp htmlColor="white" fontSize="4px" />
+          </IconButton>
         </Box>
-
-        <Box my={1}>
-          <Typography variant="h6" mt={2} color="white">
-            Upcoming Events
-          </Typography>
-          {profile.events.map((event) => (
-            <EventCard event={event} key={event.id} />
-          ))}
-        </Box>
-
-        <Box my={1}>
-          <Typography variant="h6" mt={2} color="white">
-            Upcoming Campaigns
-          </Typography>
-          {profile.campaigns.map((campaign) => (
-            <CampaignCard campaign={campaign} key={campaign.id} />
-          ))}
-        </Box>
+        {thingsToDo.map((ttd) => (
+          <ThingToDoCard ttd={ttd} key={ttd.id} />
+        ))}
       </Box>
 
       <BottomNav
-        eventsHref="/feed"
-        campHref="/campaigns"
-        profileHref="/profile"
+        eventsHref="/beach/events"
+        campHref="/beach/campaigns"
+        profileHref="/beach/profile"
       />
     </>
   );

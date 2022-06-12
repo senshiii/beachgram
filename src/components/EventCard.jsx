@@ -1,4 +1,8 @@
-import { FavoriteBorderOutlined } from "@mui/icons-material";
+import {
+  DeleteSharp,
+  EditSharp,
+  FavoriteBorderOutlined,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -18,10 +22,12 @@ const EventCard = ({
   liked,
   event,
   showBeachInfo,
+  showAdminControls,
   onRsvp,
   onUnRsvp,
   onLikeEvent,
   onUnlikeEvent,
+  hideUserActions,
 }) => {
   const nav = useNavigate();
   const {
@@ -112,46 +118,76 @@ const EventCard = ({
           <Typography variant="body2" my={1} color="white">
             {event.description}
           </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <IconButton
-              onClick={liked ? handleUnLike : handleLike}
-              bgcolor="white"
-              sx={{ mr: 3 }}
+          {!hideUserActions && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
             >
-              <FavoriteBorderOutlined htmlColor={liked ? "red" : "white"} />
-            </IconButton>
-            {rsvped ? (
-              <Button
-                onClick={handleUnRsvp}
-                fullWidth
-                sx={{ background: "red", color: "white" }}
+              <IconButton
+                onClick={liked ? handleUnLike : handleLike}
+                bgcolor="white"
+                sx={{ mr: 3 }}
               >
-                {event.paidRsvp ? "Cancel Tickets" : "I'm Out"}
-              </Button>
-            ) : (
+                <FavoriteBorderOutlined htmlColor={liked ? "red" : "white"} />
+              </IconButton>
+              {rsvped ? (
+                <Button
+                  onClick={handleUnRsvp}
+                  fullWidth
+                  sx={{ background: "red", color: "white" }}
+                >
+                  {event.paidRsvp ? "Cancel Tickets" : "I'm Out"}
+                </Button>
+              ) : (
+                <Button
+                  fullWidth
+                  my={2}
+                  sx={{
+                    background: "linear-gradient(45deg, purple, orange)",
+                    color: "white",
+                    fontSize: ".8rem",
+                  }}
+                  onClick={handleRsvp}
+                >
+                  {event.paidRsvp
+                    ? `Book Tickets at ${event.ticketCost}`
+                    : "Click to Rsvp"}
+                </Button>
+              )}
+            </Box>
+          )}
+          {showAdminControls && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mt: 2
+              }}
+            >
               <Button
                 fullWidth
-                my={2}
-                sx={{
-                  background: "linear-gradient(45deg, purple, orange)",
-                  color: "white",
-                  fontSize: ".8rem",
-                }}
-                onClick={handleRsvp}
+                sx={{ color: "yellow", borderColor: "yellow", mr: 1 }}
+                variant="outlined"
+                startIcon={<EditSharp />}
               >
-                {event.paidRsvp
-                  ? `Book Tickets at ${event.ticketCost}`
-                  : "Click to Rsvp"}
+                Edit
               </Button>
-            )}
-          </Box>
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{ ml: 1, color: 'red', borderColor: 'red' }}
+                startIcon={<DeleteSharp />}
+              >
+                Delete
+              </Button>
+            </Box>
+          )}
         </Box>
+        {/* BEACH INFO */}
         {showBeachInfo && (
           <Box
             onClick={() => nav(`/beach/${event.beachId}`)}

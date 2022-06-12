@@ -1,29 +1,28 @@
 import { Box, CircularProgress, Fab, Typography } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import BottomNav from "../components/BottomNav";
 import AddIcon from "@mui/icons-material/Add";
+import BottomNav from "../components/BottomNav";
+import { useContext, useEffect, useState } from "react";
 import { BeachContext } from "../context/BeachContext";
-import { getEventsByBeachId } from "../api/events";
-import EventCard from "../components/EventCard";
+import { getCampaignsByBeachId } from "../api/campaigns";
+import CampaignCard from "../components/CampaignCard";
 
-const BeachEvents = () => {
+const BeachCampaigns = () => {
   const { uid } = useContext(BeachContext);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [events, setEvents] = useState([]);
+  const [camps, setCamps] = useState([]);
 
   useEffect(() => {
-    getEventsByBeachId(uid).then((fetchedEvents) => {
+    getCampaignsByBeachId(uid).then((fetchedCamps) => {
       setIsLoading(false);
-      setEvents(fetchedEvents);
+      setCamps(fetchedCamps);
     });
   }, [uid]);
-
   return (
     <>
       <Box minHeight="100vh" p={2} bgcolor="#29292b" paddingBottom="10vh">
-        <Typography color="white" variant="h5">
-          Your Events
+        <Typography variant="h6" color="white">
+          Your Campaigns
         </Typography>
         {isLoading ? (
           <Box
@@ -40,12 +39,12 @@ const BeachEvents = () => {
             </Typography>
           </Box>
         ) : (
-          events.map((ev) => (
-            <EventCard
-              key={ev.id}
+          camps.map((camp) => (
+            <CampaignCard
               showAdminControls
               hideUserActions
-              event={ev}
+              campaign={camp}
+              key={camp.id}
             />
           ))
         )}
@@ -66,10 +65,10 @@ const BeachEvents = () => {
         eventsHref="/beach/events"
         campHref="/beach/campaigns"
         profileHref="/beach/profile"
-        activeTabId={0}
+        activeTabId={1}
       />
     </>
   );
 };
 
-export default BeachEvents;
+export default BeachCampaigns;
