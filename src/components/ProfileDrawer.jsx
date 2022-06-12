@@ -27,7 +27,7 @@ const ProfileDrawer = ({ isOpen, onSelect, onClose }) => {
             <ListItemIcon>
               <FavoriteBorderSharp />
             </ListItemIcon>
-            <ListItemText primary="Favorites" />
+            <ListItemText primary="Favourites" />
           </ListItemButton>
         </ListItem>
         <ListItem>

@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState, useContext, useEffect } from "react";
-import { getMyRsvps } from "../api/user";
+import { getMyLikedEvents, getMyRsvps } from "../api/user";
 import BottomNav from "../components/BottomNav";
 import ProfileDrawer from "../components/ProfileDrawer";
 import { UserContext } from "../context/UserContext";
@@ -180,7 +180,7 @@ const GoBackHeader = ({ onClick }) => {
   );
 };
 
-const Rsvps = ({ uid, onBack }) => {
+const Rsvps = ({ uid, onBack, likedEvents }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [eventRsvps, setEventRsvps] = useState([]);
   const [campaignRsvps, setCampaignRsvps] = useState([]);
@@ -219,6 +219,7 @@ const Rsvps = ({ uid, onBack }) => {
             </Typography>
             {eventRsvps.map((event) => (
               <EventCard
+                liked={likedEvents?.includes(event.id)}
                 onUnRsvp={(eventId) => {
                   setEventRsvps(
                     eventRsvps.filter((event) => event.id !== eventId)
@@ -253,7 +254,60 @@ const Rsvps = ({ uid, onBack }) => {
   );
 };
 
-const Favorite = () => {};
+const Favorite = ({ uid, onBack, eventRsvps }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [likedEvents, setLikedEvents] = useState([]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    getMyLikedEvents(uid).then((events) => {
+      setLikedEvents(events);
+      setIsLoading(false);
+    });
+  }, []);
+
+  return (
+    <>
+      <GoBackHeader onClick={onBack} />
+      {isLoading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <CircularProgress />
+          <Typography my={2} variant="body2" color="white">
+            Getting your favourite events...
+          </Typography>
+        </Box>
+      ) : (
+        <>
+          <Box my={1}>
+            <Typography varaint="h6" color="white">
+              Favourite Events
+            </Typography>
+            {likedEvents.map((event) => (
+              <EventCard
+                liked
+                rsvped={eventRsvps?.includes(event.id)}
+                onUnlikeEvent={(eventId) => {
+                  setLikedEvents(
+                    likedEvents.filter((event) => event.id !== eventId)
+                  );
+                }}
+                key={event.id}
+                event={event}
+              />
+            ))}
+          </Box>
+        </>
+      )}
+    </>
+  );
+};
 
 const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -262,6 +316,8 @@ const Profile = () => {
     uid,
     name: { first, last },
     profilePhotoUrl,
+    likedEvents,
+    eventRsvps,
   } = useContext(UserContext);
 
   let ProfileView = null;
@@ -278,9 +334,21 @@ const Profile = () => {
       break;
     case "rsvp":
       ProfileView = (
-        <Rsvps uid={uid} onBack={() => setCurrentDisplay("profile")} />
+        <Rsvps
+          likedEvents={likedEvents}
+          uid={uid}
+          onBack={() => setCurrentDisplay("profile")}
+        />
       );
       break;
+    case "favorites":
+      ProfileView = (
+        <Favorite
+          eventRsvps={eventRsvps}
+          uid={uid}
+          onBack={() => setCurrentDisplay("profile")}
+        />
+      );
   }
 
   return (

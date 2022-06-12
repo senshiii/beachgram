@@ -11,23 +11,52 @@ import { useCallback, useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import CardThumb from "../assets/auth-page-bg.jpg";
-import { rsvpEvent, unRvspEvent } from "../api/user";
+import { likeEvent, rsvpEvent, unlikeEvent, unRvspEvent } from "../api/user";
 
-const EventCard = ({ rsvped, event, showBeachInfo, onRsvp, onUnRsvp }) => {
+const EventCard = ({
+  rsvped,
+  liked,
+  event,
+  showBeachInfo,
+  onRsvp,
+  onUnRsvp,
+  onLikeEvent,
+  onUnlikeEvent,
+}) => {
   const nav = useNavigate();
-  const { uid, addEventRsvp, removeEventRsvp } = useContext(UserContext);
+  const {
+    uid,
+    addEventRsvp,
+    removeEventRsvp,
+    addEventLike,
+    removeEventLike,
+  } = useContext(UserContext);
 
   const handleRsvp = useCallback(async () => {
     await rsvpEvent(event.id, uid);
     addEventRsvp(event.id);
-    if(onRsvp && typeof onRsvp === 'function') onRsvp(event.id);
+    if (onRsvp && typeof onRsvp === "function") onRsvp(event.id);
   }, [event.id, uid]);
 
   const handleUnRsvp = useCallback(async () => {
     await unRvspEvent(event.id, uid);
     removeEventRsvp(event.id);
-    if(onUnRsvp && typeof onUnRsvp === 'function') onUnRsvp(event.id);
+    if (onUnRsvp && typeof onUnRsvp === "function") onUnRsvp(event.id);
   }, [event.id, uid]);
+
+  const handleLike = useCallback(async () => {
+    console.log('Liking event', event.id);
+    await likeEvent(event.id, uid);
+    addEventLike(event.id);
+    if (onLikeEvent && typeof onLikeEvent === "function") onLikeEvent(event.id);
+  }, [event.id]);
+
+  const handleUnLike = useCallback(async () => {
+    await unlikeEvent(event.id, uid);
+    removeEventLike(event.id);
+    if (onUnlikeEvent && typeof onUnlikeEvent === "function")
+      onUnlikeEvent(event.id);
+  }, [event.id]);
 
   return (
     <>
@@ -90,8 +119,12 @@ const EventCard = ({ rsvped, event, showBeachInfo, onRsvp, onUnRsvp }) => {
               alignItems: "center",
             }}
           >
-            <IconButton bgcolor="white" sx={{ mr: 3 }}>
-              <FavoriteBorderOutlined htmlColor="white" />
+            <IconButton
+              onClick={liked ? handleUnLike : handleLike}
+              bgcolor="white"
+              sx={{ mr: 3 }}
+            >
+              <FavoriteBorderOutlined htmlColor={liked ? "red" : "white"} />
             </IconButton>
             {rsvped ? (
               <Button

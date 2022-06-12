@@ -53,7 +53,8 @@ const Login = () => {
         email,
         profilePhotoUrl,
         userData?.eventRsvps,
-        userData?.campaignRsvps
+        userData?.campaignRsvps,
+        userData?.likedEvents
       );
       onSignIn();
       setIsLoading(false);

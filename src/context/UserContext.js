@@ -9,6 +9,7 @@ export const UserContext = createContext({
   email: "",
   profilePhotoUrl: "",
   eventRsvps: [],
+  likedEvents: [],
   campaignRsvps: [],
   setDetails: (
     uid,
@@ -17,12 +18,15 @@ export const UserContext = createContext({
     email,
     profilePhotoUrl,
     eventRsvps,
-    campaignRsvps
+    campaignRsvps,
+    likedEvents
   ) => {},
   removeEventRsvp: (eventId) => {},
   addEventRsvp: (eventId) => {},
-  removeCampaignRsvp: (capaignId) => {},
-  addCampaignRsvp: (capaignId) => {},
+  removeCampaignRsvp: (campaignId) => {},
+  addCampaignRsvp: (campaignId) => {},
+  addEventLike: (eventId) => {},
+  removeEventLike: (eventId) => {},
 });
 
 export default ({ children }) => {
@@ -33,6 +37,7 @@ export default ({ children }) => {
   const [profilePhotoUrl, setprofilePhotoUrl] = useState("");
   const [eventRsvps, setEventRsvps] = useState([]);
   const [campaignRsvps, setCampaignRsvps] = useState([]);
+  const [likedEvents, setLikedEvents] = useState([]);
 
   const setUserDetails = (
     uid,
@@ -41,7 +46,8 @@ export default ({ children }) => {
     email,
     profilePhotoUrl,
     eventRsvps,
-    campaignRsvps
+    campaignRsvps,
+    likedEvents
   ) => {
     setUid(uid);
     setFirstName(firstName);
@@ -50,6 +56,7 @@ export default ({ children }) => {
     setprofilePhotoUrl(profilePhotoUrl);
     setEventRsvps(eventRsvps);
     setCampaignRsvps(campaignRsvps);
+    setLikedEvents(likedEvents);
   };
 
   const addEventRsvp = useCallback(
@@ -80,6 +87,20 @@ export default ({ children }) => {
     [eventRsvps]
   );
 
+  const addEventLike = useCallback(
+    (eventId) => {
+      setLikedEvents([...likedEvents, eventId]);
+    },
+    [likedEvents]
+  );
+
+  const removeEventLike = useCallback(
+    (eventId) => {
+      setLikedEvents(likedEvents.filter((eid) => eid !== eventId));
+    },
+    [likedEvents]
+  );
+
   return (
     <UserContext.Provider
       value={{
@@ -92,11 +113,14 @@ export default ({ children }) => {
         profilePhotoUrl,
         eventRsvps,
         campaignRsvps,
+        likedEvents,
         setDetails: setUserDetails,
         addEventRsvp,
         removeEventRsvp,
         addCampaignRsvp,
-        removeCampaignRsvp
+        removeCampaignRsvp,
+        addEventLike,
+        removeEventLike,
       }}
     >
       {children}

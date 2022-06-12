@@ -8,7 +8,7 @@ import { UserContext } from "../context/UserContext";
 const Feed = () => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { eventRsvps } = useContext(UserContext);
+  const { eventRsvps, likedEvents } = useContext(UserContext);
 
   useEffect(() => {
     setIsLoading(true);
@@ -37,6 +37,7 @@ const Feed = () => {
           <Box my={3}>
             {events.map((ev) => (
               <EventCard
+                liked={likedEvents?.includes(ev.id)}
                 rsvped={eventRsvps?.includes(ev.id)}
                 showBeachInfo
                 key={ev.id}
