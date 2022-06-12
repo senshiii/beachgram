@@ -70,13 +70,13 @@ export async function getMyRsvps(userId) {
         return { id: campId, ...camp };
       })
     );
-    console.log("[getMyRsvps] events", events, "camps", campaigns);
+    // console.log("[getMyRsvps] events", events, "camps", campaigns);
     return {
       events,
       campaigns,
     };
   } catch (err) {
-    console.log("Error fetching my rsvps", err.message);
+    // console.log("Error fetching my rsvps", err.message);
     throw new Error(err.message);
   }
 }
@@ -114,10 +114,10 @@ export async function getMyLikedEvents(userId) {
         return { id: eventId, ...event };
       })
     );
-    console.log("[getMyLikedEvents] events", events);
+    // console.log("[getMyLikedEvents] events", events);
     return events;
   } catch (err) {
-    console.log("Error fetching my liked events", err.message);
+    // console.log("Error fetching my liked events", err.message);
     throw new Error(err.message);
   }
 }

@@ -10,7 +10,7 @@ export async function uploadFile(file, filePath){
   try{
     const storageRef = ref(storage, filePath);
     const uploadRes = await uploadBytes(storageRef, file);
-    console.log(uploadRes);
+    // console.log(uploadRes);
   }catch(err) {
     throw new Error(err.message);
   }

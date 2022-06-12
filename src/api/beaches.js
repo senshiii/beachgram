@@ -14,7 +14,7 @@ export async function getBeachById(beachId) {
       ...beachSnap.data(),
     };
   } catch (err) {
-    console.log("[getBeachById] error", err.message);
+    // console.log("[getBeachById] error", err.message);
     throw new Error(err.message);
   }
 }
@@ -33,10 +33,10 @@ export async function getBeachProfile(beachId) {
       events,
       ...beachSnap.data(),
     };
-    console.log('Beach Profile', beachProfile);
+    // console.log('Beach Profile', beachProfile);
     return beachProfile;
   } catch (err) {
-    console.log("[getBeachById] error", err.message);
+    // console.log("[getBeachById] error", err.message);
     throw new Error(err.message);
   }
 }

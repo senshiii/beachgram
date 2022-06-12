@@ -55,12 +55,12 @@ export async function loginUser(email, password) {
     const docSnap = await getDoc(userDoc);
     if (docSnap.exists()) {
       const userData = docSnap.data();
-      console.log('[loginUser] userData', userData);
+      // console.log('[loginUser] userData', userData);
       return { id: user.uid, ...userData };
     }
     throw new Error("Something went wrong");
   } catch (err) {
-    console.log("[loginUser] err", err.message);
+    // console.log("[loginUser] err", err.message);
     if (err.message?.includes("wrong-password"))
       throw new Error("Incorrect credentials");
     else throw err;
@@ -105,7 +105,7 @@ export async function loginBeach(email, password) {
     if (docSnap.exists()) return { id: beach.uid, ...docSnap.data() };
     else throw new Error("Code #404: Beach not found");
   } catch (err) {
-    console.log("[loginBeach] err", err.message);
+    // console.log("[loginBeach] err", err.message);
     throw new Error(err.message);
   }
 }

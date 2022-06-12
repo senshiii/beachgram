@@ -45,7 +45,7 @@ const EventCard = ({
   }, [event.id, uid]);
 
   const handleLike = useCallback(async () => {
-    console.log('Liking event', event.id);
+    // console.log('Liking event', event.id);
     await likeEvent(event.id, uid);
     addEventLike(event.id);
     if (onLikeEvent && typeof onLikeEvent === "function") onLikeEvent(event.id);

@@ -12,7 +12,7 @@ export async function getCampaigns() {
         try {
           beachData = await getBeachById(beachId);
         } catch (err) {
-          console.log("Error fetching beach data", err.message);
+          // console.log("Error fetching beach data", err.message);
         }
         return {
           id: doc.id,
@@ -21,10 +21,10 @@ export async function getCampaigns() {
         };
       })
     );
-    console.log("Campaigns", campaigns);
+    // console.log("Campaigns", campaigns);
     return campaigns;
   } catch (err) {
-    console.log("[getCampaigns] error", err);
+    // console.log("[getCampaigns] error", err);
     throw new Error(err.message);
   }
 }
@@ -36,7 +36,7 @@ export async function getCampaignById(campId){
     const campaign = campaignSnap.data();
     return campaign;
   }catch(err){
-    console.log("Error fetching campaign by id", err.message);
+    // console.log("Error fetching campaign by id", err.message);
     throw new Error(err.message)
   }
 }
@@ -50,7 +50,7 @@ export async function getCampaignsByBeachId(beachId) {
       ...campDoc.data(),
     }));
   } catch (err) {
-    console.log("Error fetching campaigns by beach id", err.message);
+    // console.log("Error fetching campaigns by beach id", err.message);
     throw new Error(err.message);
   }
 }

@@ -23,7 +23,7 @@ export async function getEventById(eventId){
     const event = eventSnap.data();
     return event;
   }catch(err){
-    console.log("Error fetching event by id", err.message);
+    // console.log("Error fetching event by id", err.message);
     throw new Error(err.message)
   }
 }
@@ -42,7 +42,7 @@ export async function fetchAllEvents() {
         try {
           beachData = await getBeachById(beachId);
         } catch (err) {
-          console.log("Error fetching beach data", err.message);
+          // console.log("Error fetching beach data", err.message);
         }
 
         return {
@@ -55,7 +55,7 @@ export async function fetchAllEvents() {
         };
       })
     );
-    console.log(events);
+    // console.log(events);
     return events;
   } catch (err) {}
 }
