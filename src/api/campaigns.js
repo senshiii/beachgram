@@ -1,4 +1,4 @@
-import { getDocs, query, collection, where } from "firebase/firestore";
+import { getDocs, doc, getDoc, query, collection, where } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { getBeachById } from "./beaches";
 
@@ -26,6 +26,18 @@ export async function getCampaigns() {
   } catch (err) {
     console.log("[getCampaigns] error", err);
     throw new Error(err.message);
+  }
+}
+
+export async function getCampaignById(campId){
+  try{
+    const campaignRef = doc(db, "campaign", campId);
+    const campaignSnap = await getDoc(campaignRef);
+    const campaign = campaignSnap.data();
+    return campaign;
+  }catch(err){
+    console.log("Error fetching campaign by id", err.message);
+    throw new Error(err.message)
   }
 }
 

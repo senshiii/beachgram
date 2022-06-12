@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { getBeachById } from "./beaches";
 
@@ -13,6 +13,18 @@ export async function getEventsByBeachId(beachId) {
     return data;
   } catch (err) {
     throw new Error(err.message);
+  }
+}
+
+export async function getEventById(eventId){
+  try{
+    const eventRef = doc(db, "events", eventId);
+    const eventSnap = await getDoc(eventRef);
+    const event = eventSnap.data();
+    return event;
+  }catch(err){
+    console.log("Error fetching event by id", err.message);
+    throw new Error(err.message)
   }
 }
 

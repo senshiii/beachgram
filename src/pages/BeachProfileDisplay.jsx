@@ -6,26 +6,23 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Image from "../assets/auth-page-bg.jpg";
-import {
-  FavoriteBorder,
-  FavoriteBorderSharp,
-  LocationOn,
-  Waves,
-} from "@mui/icons-material";
+import { LocationOn, Waves } from "@mui/icons-material";
 import BottomNav from "../components/BottomNav";
 import { getBeachProfile } from "../api/beaches";
 import ThingToDoCard from "../components/ThingToDoCard";
 import EventCard from "../components/EventCard";
 import CampaignCard from "../components/CampaignCard";
+import { UserContext } from '../context/UserContext'
 
 const BeachProfileDisplay = () => {
   const { beachId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [profile, setProfile] = useState(null);
+  const { eventRsvps, campaignRsvps } = useContext(UserContext)
 
   useEffect(() => {
     if (!loaded) {
@@ -105,12 +102,6 @@ const BeachProfileDisplay = () => {
             <LocationOn htmlColor="red" />
             &nbsp;{profile.address}
           </Typography>
-          <Button
-            startIcon={<FavoriteBorder />}
-            sx={{ background: "red", color: "black", my: 2 }}
-          >
-            Add To Favourites
-          </Button>
         </Box>
 
         <Box>
@@ -127,7 +118,7 @@ const BeachProfileDisplay = () => {
             Upcoming Events
           </Typography>
           {profile.events.map((event) => (
-            <EventCard event={event} key={event.id} />
+            <EventCard rsvped={eventRsvps?.includes(event.id)} event={event} key={event.id} />
           ))}
         </Box>
 
@@ -136,11 +127,16 @@ const BeachProfileDisplay = () => {
             Upcoming Campaigns
           </Typography>
           {profile.campaigns.map((campaign) => (
-            <CampaignCard campaign={campaign} key={campaign.id} />
+            <CampaignCard rsvped={campaignRsvps?.includes(campaign.id)} campaign={campaign} key={campaign.id} />
           ))}
         </Box>
 
-        <Typography color="gray" textAlign="center" width="100%" variant="body2">
+        <Typography
+          color="gray"
+          textAlign="center"
+          width="100%"
+          variant="body2"
+        >
           Contact us at : {profile.email}
         </Typography>
       </Box>

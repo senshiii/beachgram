@@ -13,18 +13,20 @@ import { useNavigate } from "react-router-dom";
 import CardThumb from "../assets/auth-page-bg.jpg";
 import { rsvpEvent, unRvspEvent } from "../api/user";
 
-const EventCard = ({ rsvped, event, showBeachInfo }) => {
+const EventCard = ({ rsvped, event, showBeachInfo, onRsvp, onUnRsvp }) => {
   const nav = useNavigate();
   const { uid, addEventRsvp, removeEventRsvp } = useContext(UserContext);
 
   const handleRsvp = useCallback(async () => {
     await rsvpEvent(event.id, uid);
     addEventRsvp(event.id);
+    if(onRsvp && typeof onRsvp === 'function') onRsvp(event.id);
   }, [event.id, uid]);
 
   const handleUnRsvp = useCallback(async () => {
     await unRvspEvent(event.id, uid);
     removeEventRsvp(event.id);
+    if(onUnRsvp && typeof onUnRsvp === 'function') onUnRsvp(event.id);
   }, [event.id, uid]);
 
   return (

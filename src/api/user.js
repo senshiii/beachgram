@@ -1,5 +1,13 @@
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase/firebase";
+import { getCampaignById } from "./campaigns";
+import { getEventById } from "./events";
 
 export async function rsvpEvent(eventId, userId) {
   try {
@@ -41,6 +49,34 @@ export async function unRsvpCampaign(campaignId, userId) {
     await updateDoc(userRef, { campaignRsvps: arrayRemove(campaignId) });
     return true;
   } catch (err) {
+    throw new Error(err.message);
+  }
+}
+
+export async function getMyRsvps(userId) {
+  try {
+    const userRef = doc(db, "users", userId);
+    const docSnap = await getDoc(userRef);
+    const { eventRsvps, campaignRsvps } = docSnap.data();
+    const events = await Promise.all(
+      eventRsvps.map(async (eventId) => {
+        const event = await getEventById(eventId);
+        return {id: eventId, ...event};
+      })
+    );
+    const campaigns = await Promise.all(
+      campaignRsvps.map(async (campId) => {
+        const camp = await getCampaignById(campId);
+        return {id: campId, ...camp};
+      })
+    );
+    console.log('[getMyRsvps] events', events, 'camps', campaigns);
+    return {
+      events,
+      campaigns,
+    };
+  } catch (err) {
+    console.log("Error fetching my rsvps", err.message);
     throw new Error(err.message);
   }
 }

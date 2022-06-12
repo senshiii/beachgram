@@ -5,7 +5,7 @@ import { useCallback, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { rsvpCampaign, unRsvpCampaign } from "../api/user";
 
-const CampaignCard = ({ rsvped, campaign, showBeachInfo }) => {
+const CampaignCard = ({ rsvped, campaign, showBeachInfo, onRsvp, onUnRsvp }) => {
   const fillingFast = campaign.headCount >= campaign.maxParticipants / 2;
 
   const { uid, addCampaignRsvp, removeCampaignRsvp } = useContext(UserContext);
@@ -13,11 +13,13 @@ const CampaignCard = ({ rsvped, campaign, showBeachInfo }) => {
   const handleRsvp = useCallback(async () => {
     await rsvpCampaign(campaign.id, uid);
     addCampaignRsvp(campaign.id);
+    if(onRsvp && typeof onRsvp === 'function') onRsvp(campaign.id);
   }, [campaign.id, uid]);
 
   const handleUnRsvp = useCallback(async () => {
     await unRsvpCampaign(campaign.id, uid);
     removeCampaignRsvp(campaign.id);
+    if(onUnRsvp && typeof onUnRsvp === 'function') onUnRsvp(campaign.id);
   }, [campaign.id, uid]);
 
   return (

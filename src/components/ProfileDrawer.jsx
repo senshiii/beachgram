@@ -23,7 +23,7 @@ const ProfileDrawer = ({ isOpen, onSelect, onClose }) => {
     >
       <List>
         <ListItem>
-          <ListItemButton onClick={() => onSelect("favorite")} >
+          <ListItemButton onClick={() => onSelect("favorites")} >
             <ListItemIcon>
               <FavoriteBorderSharp />
             </ListItemIcon>
@@ -35,7 +35,7 @@ const ProfileDrawer = ({ isOpen, onSelect, onClose }) => {
             <ListItemIcon>
               <RsvpSharp />
             </ListItemIcon>
-            <ListItemText primary="Rsvpd" />
+            <ListItemText primary="My Rsvps" />
           </ListItemButton>
         </ListItem>
       </List>
