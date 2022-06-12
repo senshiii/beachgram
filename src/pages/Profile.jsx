@@ -1,5 +1,6 @@
 import {
   ArrowBackSharp,
+  ArrowRightSharp,
   EditSharp,
   FastfoodSharp,
   Menu,
@@ -21,8 +22,15 @@ import ProfileDrawer from "../components/ProfileDrawer";
 import { UserContext } from "../context/UserContext";
 import EventCard from "../components/EventCard";
 import CampaignCard from "../components/CampaignCard";
+import { FaCoins } from "react-icons/fa";
 
-const ProfileDetails = ({ first, last, profilePhotoUrl, onClickMenu }) => {
+const ProfileDetails = ({
+  first,
+  last,
+  email,
+  profilePhotoUrl,
+  onClickMenu,
+}) => {
   return (
     <>
       <Box
@@ -80,6 +88,9 @@ const ProfileDetails = ({ first, last, profilePhotoUrl, onClickMenu }) => {
           color="white"
           variant="h6"
         >{`${first} ${last}`}</Typography>
+        <Typography variant="body2" color="gray">
+          {email}
+        </Typography>
       </Box>
       <Box my={2}>
         <Typography variant="body1" color="white">
@@ -309,11 +320,73 @@ const Favorite = ({ uid, onBack, eventRsvps }) => {
   );
 };
 
+const MyCoins = ({ onBack }) => {
+  return (
+    <>
+      <GoBackHeader onClick={onBack} />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <FaCoins
+          style={{
+            width: "64px",
+            height: "64px",
+            color: "yellow",
+          }}
+        />
+        <Typography variant="body1" color="white" my={2}>
+          You have <span style={{ color: "yellow" }}>10</span> BeachCoins
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            p: 2,
+            my: 1,
+            color: 'white',
+            width: '100%',
+            borderRadius: 2,
+            cursor: 'pointer',
+            background: '#1d1d1d'
+          }}
+        >
+          <Typography variant="h6">Donate to Charity</Typography>
+          <ArrowRightSharp />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            p: 2,
+            my: 1,
+            color: 'white',
+            width: '100%',
+            borderRadius: 2,
+            cursor: 'pointer',
+            background: '#1d1d1d'
+          }}
+        >
+          <Typography variant="h6">Donate to Beach Commiittee</Typography>
+          <ArrowRightSharp />
+        </Box>
+      </Box>
+    </>
+  );
+};
+
 const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentDisplay, setCurrentDisplay] = useState("profile");
   const {
     uid,
+    email,
     name: { first, last },
     profilePhotoUrl,
     likedEvents,
@@ -327,6 +400,7 @@ const Profile = () => {
         <ProfileDetails
           first={first}
           last={last}
+          email={email}
           onClickMenu={() => setIsOpen(true)}
           profilePhotoUrl={profilePhotoUrl}
         />
@@ -349,6 +423,9 @@ const Profile = () => {
           onBack={() => setCurrentDisplay("profile")}
         />
       );
+      break;
+    case "coin":
+      ProfileView = <MyCoins onBack={() => setCurrentDisplay("profile")} />;
   }
 
   return (

@@ -4,18 +4,68 @@ import {
   FavoriteBorderOutlined,
 } from "@mui/icons-material";
 import {
+  Avatar,
   Box,
   Button,
   Chip,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
   IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
   Snackbar,
   Typography,
 } from "@mui/material";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import CardThumb from "../assets/auth-page-bg.jpg";
 import { likeEvent, rsvpEvent, unlikeEvent, unRvspEvent } from "../api/user";
+import { getEventRsvpUsers } from "../api/events";
+
+const RSVPListDialog = ({ open, onClose, eventId }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    getEventRsvpUsers(eventId).then((users) => {
+      setList(users);
+      setIsLoading(false);
+    });
+  }, []);
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Event RSVP List</DialogTitle>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        list.map((user) => {
+          return (
+            <List key={user.id}>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar src={user.profilePhotoUrl}>
+                    {user.name?.first?.substring(0, 1)}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={`${user.name?.first} ${user.name.last}`}
+                  secondary={user.email}
+                />
+              </ListItem>
+            </List>
+          );
+        })
+      )}
+      <Button mt={2} onClick={onClose} >Close</Button>
+    </Dialog>
+  );
+};
 
 const EventCard = ({
   rsvped,
@@ -37,6 +87,8 @@ const EventCard = ({
     addEventLike,
     removeEventLike,
   } = useContext(UserContext);
+
+  const [showUserList, setShowUserList] = useState(false);
 
   const handleRsvp = useCallback(async () => {
     await rsvpEvent(event.id, uid);
@@ -66,6 +118,11 @@ const EventCard = ({
 
   return (
     <>
+      <RSVPListDialog
+        open={showUserList}
+        onClose={() => setShowUserList(false)}
+        eventId={event.id}
+      />
       <Box
         bgcolor="#302e2e"
         my={3}
@@ -160,31 +217,41 @@ const EventCard = ({
             </Box>
           )}
           {showAdminControls && (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mt: 2
-              }}
-            >
+            <>
               <Button
-                fullWidth
-                sx={{ color: "yellow", borderColor: "yellow", mr: 1 }}
                 variant="outlined"
-                startIcon={<EditSharp />}
-              >
-                Edit
-              </Button>
-              <Button
                 fullWidth
-                variant="outlined"
-                sx={{ ml: 1, color: 'red', borderColor: 'red' }}
-                startIcon={<DeleteSharp />}
+                onClick={() => setShowUserList(true)}
+                sx={{ my: 1 }}
               >
-                Delete
+                Show RSVP List
               </Button>
-            </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mt: 2,
+                }}
+              >
+                <Button
+                  fullWidth
+                  sx={{ color: "yellow", borderColor: "yellow", mr: 1 }}
+                  variant="outlined"
+                  startIcon={<EditSharp />}
+                >
+                  Edit
+                </Button>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  sx={{ ml: 1, color: "red", borderColor: "red" }}
+                  startIcon={<DeleteSharp />}
+                >
+                  Delete
+                </Button>
+              </Box>
+            </>
           )}
         </Box>
         {/* BEACH INFO */}

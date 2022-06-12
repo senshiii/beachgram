@@ -59,3 +59,27 @@ export async function fetchAllEvents() {
     return events;
   } catch (err) {}
 }
+
+export async function getEventRsvpUsers(eventId){
+  try{
+    const eventRef = doc(db, "events", eventId);
+    const { rsvpUserIds } = (await getDoc(eventRef)).data();
+    const users = await Promise.all(rsvpUserIds.map(async userId => {
+      const userRef = doc(db, "users", userId);
+      const docSnap = await getDoc(userRef);
+      const { name, email, profilePhotoUrl } = docSnap.data();
+      return {
+        id: docSnap.id,
+        name,
+        email,
+        profilePhotoUrl
+      }
+    }))
+    console.log('Rsvped users', users);
+    return users;
+  }catch(err){
+    console.log('Error fethcing rsvped users for event', eventId, '->', err.message)
+    throw new Error(err.message);
+  }
+}
+

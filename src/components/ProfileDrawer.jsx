@@ -1,4 +1,4 @@
-import { FavoriteBorderSharp, RsvpSharp } from "@mui/icons-material";
+import { CurrencyExchange, FavoriteBorderSharp, RsvpSharp } from "@mui/icons-material";
 import {
   Drawer,
   List,
@@ -6,7 +6,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  SwipeableDrawer,
 } from "@mui/material";
 import React from "react";
 
@@ -36,6 +35,14 @@ const ProfileDrawer = ({ isOpen, onSelect, onClose }) => {
               <RsvpSharp />
             </ListItemIcon>
             <ListItemText primary="My Rsvps" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem>
+          <ListItemButton onClick={() => onSelect("coin")} >
+            <ListItemIcon>
+              <CurrencyExchange />
+            </ListItemIcon>
+            <ListItemText primary="My Coins" />
           </ListItemButton>
         </ListItem>
       </List>

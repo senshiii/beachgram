@@ -14,6 +14,8 @@ export async function rsvpEvent(eventId, userId) {
     // console.log("[rsvpEvent] eventId", eventId, "userId", userId);
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, { eventRsvps: arrayUnion(eventId) });
+    const eventRef = doc(db, "events", eventId);
+    await updateDoc(eventRef, { rsvpUserIds: arrayUnion(userId) });
     return true;
   } catch (err) {
     throw new Error(err.message);
@@ -25,6 +27,8 @@ export async function unRvspEvent(eventId, userId) {
     // console.log("[unRvspEvent] eventId", eventId, "userId", userId);
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, { eventRsvps: arrayRemove(eventId) });
+    const eventRef = doc(db, "events", eventId);
+    await updateDoc(eventRef, { rsvpUserIds: arrayRemove(userId) });
     return true;
   } catch (err) {
     throw new Error(err.message);
@@ -36,6 +40,8 @@ export async function rsvpCampaign(campaignId, userId) {
     // console.log("[rsvpCampaign] campId", campaignId, "userId", userId);
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, { campaignRsvps: arrayUnion(campaignId) });
+    const campRef = doc(db, "campaign", campaignId);
+    await updateDoc(campRef, { rsvpUserIds: arrayUnion(userId) });
     return true;
   } catch (err) {
     throw new Error(err.message);
@@ -47,6 +53,8 @@ export async function unRsvpCampaign(campaignId, userId) {
     // console.log("[unRsvpCampaign] campId", campaignId, "userId", userId);
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, { campaignRsvps: arrayRemove(campaignId) });
+    const campRef = doc(db, "events", campaignId);
+    await updateDoc(campRef, { rsvpUserIds: arrayRemove(userId) });
     return true;
   } catch (err) {
     throw new Error(err.message);
