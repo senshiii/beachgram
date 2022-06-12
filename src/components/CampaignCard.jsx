@@ -4,9 +4,11 @@ import CardThumb from "../assets/auth-page-bg.jpg";
 import { useCallback, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { rsvpCampaign, unRsvpCampaign } from "../api/user";
+import { useNavigate } from 'react-router-dom'
 
 const CampaignCard = ({ rsvped, campaign, showBeachInfo, onRsvp, onUnRsvp }) => {
   const fillingFast = campaign.headCount >= campaign.maxParticipants / 2;
+  const nav = useNavigate()
 
   const { uid, addCampaignRsvp, removeCampaignRsvp } = useContext(UserContext);
 
@@ -162,6 +164,7 @@ const CampaignCard = ({ rsvped, campaign, showBeachInfo, onRsvp, onUnRsvp }) => 
             alignItems: "center",
             cursor: "pointer",
           }}
+          onClick={() => nav(`/beach/${campaign.beachId}`)}
         >
           <img
             src={CardThumb}

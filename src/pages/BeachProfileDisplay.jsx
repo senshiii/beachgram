@@ -15,14 +15,14 @@ import { getBeachProfile } from "../api/beaches";
 import ThingToDoCard from "../components/ThingToDoCard";
 import EventCard from "../components/EventCard";
 import CampaignCard from "../components/CampaignCard";
-import { UserContext } from '../context/UserContext'
+import { UserContext } from "../context/UserContext";
 
 const BeachProfileDisplay = () => {
   const { beachId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [profile, setProfile] = useState(null);
-  const { eventRsvps, campaignRsvps } = useContext(UserContext)
+  const { eventRsvps, campaignRsvps } = useContext(UserContext);
 
   useEffect(() => {
     if (!loaded) {
@@ -113,21 +113,38 @@ const BeachProfileDisplay = () => {
           ))}
         </Box>
 
-        <Box my={1}>
-          <Typography variant="h6" mt={2} color="white">
-            Upcoming Events
-          </Typography>
-          {profile.events.map((event) => (
-            <EventCard rsvped={eventRsvps?.includes(event.id)} event={event} key={event.id} />
-          ))}
-        </Box>
+        {profile.events?.length > 0 ? (
+          <Box my={1}>
+            <Typography variant="h6" mt={2} color="white">
+              Upcoming Events
+            </Typography>
+            {profile.events.map((event) => (
+              <EventCard
+                rsvped={eventRsvps?.includes(event.id)}
+                event={event}
+                key={event.id}
+              />
+            ))}
+          </Box>
+        ) : (
+          <Box my={2}>
+            <Typography variant="h6" mt={2} color="white">
+              Upcoming Events
+            </Typography>
+            <Typography my={2} color="red" textAlign="center" variant="body1">Sorry, no events found</Typography>
+          </Box>
+        )}
 
         <Box my={1}>
           <Typography variant="h6" mt={2} color="white">
             Upcoming Campaigns
           </Typography>
           {profile.campaigns.map((campaign) => (
-            <CampaignCard rsvped={campaignRsvps?.includes(campaign.id)} campaign={campaign} key={campaign.id} />
+            <CampaignCard
+              rsvped={campaignRsvps?.includes(campaign.id)}
+              campaign={campaign}
+              key={campaign.id}
+            />
           ))}
         </Box>
 
